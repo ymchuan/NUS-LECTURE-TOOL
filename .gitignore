@@ -1,0 +1,10 @@
+node_modules
+dist
+src-tauri/target
+src-tauri/target-codex-test
+target-codex-test
+.DS_Store
+*.log
+.apex-download-watch/
+.playwright-mcp/
+asu_skills_inspection*.txt
