@@ -1,0 +1,8 @@
+[resolver]
+incompatible-rust-versions = "fallback"
+
+[http]
+proxy = ""
+
+[source.crates-io]
+registry = "sparse+https://index.crates.io/"
