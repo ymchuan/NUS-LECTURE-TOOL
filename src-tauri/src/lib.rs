@@ -654,7 +654,7 @@ fn translation_stream_event(line: &str) -> TranslationStreamEvent {
         return TranslationStreamEvent::Ignore;
     };
     if let Some(delta) = translation_delta(&event).filter(|delta| !delta.is_empty()) {
-        return TranslationStreamEvent::Delta(delta.to_string());
+        return TranslationStreamEvent::Delta(clean_translation_markdown(delta));
     }
     match event.get("type").and_then(Value::as_str) {
         Some("response.completed") => TranslationStreamEvent::Completed,
@@ -667,6 +667,24 @@ fn translation_stream_event(line: &str) -> TranslationStreamEvent {
                 .to_string(),
         ),
         _ => TranslationStreamEvent::Ignore,
+    }
+}
+
+fn clean_translation_markdown(text: &str) -> String {
+    text.replace("**", "")
+}
+
+#[cfg(test)]
+mod markdown_cleaning_tests {
+    use super::*;
+
+    #[test]
+    fn removes_markdown_bold_markers_from_translation() {
+        assert_eq!(clean_translation_markdown("普通文本"), "普通文本");
+        assert_eq!(clean_translation_markdown("**主要负责注册和跟踪功能**"), "主要负责注册和跟踪功能");
+        assert_eq!(clean_translation_markdown("从而**主要负责**注册"), "从而主要负责注册");
+        assert_eq!(clean_translation_markdown("**核心**概念和**重点**"), "核心概念和重点");
+        assert_eq!(clean_translation_markdown("**"), "");
     }
 }
 
@@ -787,7 +805,7 @@ async fn translate_segment(app: AppHandle, request: TranslationRequest) -> Resul
         clip_characters(request.course_name.trim(), 200), glossary, previous, english
     );
 
-    let instructions = "Translate the lecturer's English into concise, natural Simplified Chinese. Preserve all technical terms, numbers, equations, negation, uncertainty, and emphasis. Follow the supplied glossary exactly; when an entry says 保留英文, copy that source token unchanged and do not translate or expand it. Return only the Chinese translation, with no labels, explanation, or visible reasoning.";
+    let instructions = "Translate the lecturer's English into concise, natural Simplified Chinese. Preserve all technical terms, numbers, equations, negation, uncertainty, and emphasis. Follow the supplied glossary exactly; when an entry says 保留英文, copy that source token unchanged and do not translate or expand it. Return only the Chinese translation as plain text, with no markdown formatting, labels, explanation, or visible reasoning.";
     let is_qwen_mt = request.provider == "alibaba" && model.starts_with("qwen-mt-");
     let (endpoint, payload) = if is_local {
         (
