@@ -232,6 +232,9 @@ export function CourseDialog({
   initialTerms,
   initialSummaryPreferences,
   hasOpenAiApiKey,
+  hasOpenAiTranslationKey,
+  hasOpenAiSummaryKey,
+  hasOpenAiLectureSummaryKey,
   hasAlibabaApiKey,
   hasAlibabaAsrApiKey,
   hasDeepgramApiKey,
@@ -246,6 +249,9 @@ export function CourseDialog({
   initialCourse: Course | null;
   initialTerms: GlossaryTerm[];
   hasOpenAiApiKey: boolean;
+  hasOpenAiTranslationKey?: boolean;
+  hasOpenAiSummaryKey?: boolean;
+  hasOpenAiLectureSummaryKey?: boolean;
   hasAlibabaApiKey: boolean;
   hasAlibabaAsrApiKey: boolean;
   hasDeepgramApiKey: boolean;
@@ -257,6 +263,9 @@ export function CourseDialog({
     course: CourseDraft,
     terms: GlossaryTerm[],
     openAiApiKey: string,
+    openAiTranslationKey: string,
+    openAiSummaryKey: string,
+    openAiLectureSummaryKey: string,
     alibabaApiKey: string,
     alibabaAsrApiKey: string,
     deepgramApiKey: string,
@@ -267,6 +276,9 @@ export function CourseDialog({
   const [draft, setDraft] = useState<CourseDraft>({ code: "", name: "", description: "" });
   const [terms, setTerms] = useState<GlossaryTerm[]>([]);
   const [openAiApiKey, setOpenAiApiKey] = useState("");
+  const [openAiTranslationKey, setOpenAiTranslationKey] = useState("");
+  const [openAiSummaryKey, setOpenAiSummaryKey] = useState("");
+  const [openAiLectureSummaryKey, setOpenAiLectureSummaryKey] = useState("");
   const [alibabaApiKey, setAlibabaApiKey] = useState("");
   const [alibabaAsrApiKey, setAlibabaAsrApiKey] = useState("");
   const [deepgramApiKey, setDeepgramApiKey] = useState("");
@@ -301,6 +313,9 @@ export function CourseDialog({
     );
     setTerms(initialTerms);
     setOpenAiApiKey("");
+    setOpenAiTranslationKey("");
+    setOpenAiSummaryKey("");
+    setOpenAiLectureSummaryKey("");
     setAlibabaApiKey("");
     setAlibabaAsrApiKey("");
     setDeepgramApiKey("");
@@ -378,6 +393,9 @@ export function CourseDialog({
         draft,
         terms,
         openAiApiKey,
+        openAiTranslationKey,
+        openAiSummaryKey,
+        openAiLectureSummaryKey,
         alibabaApiKey,
         alibabaAsrApiKey,
         deepgramApiKey,
@@ -560,6 +578,9 @@ export function CourseDialog({
                   />
                 </div>
               </div>
+              <div className="key-input-row"><label htmlFor="openai-translation-key">翻译 Key</label><input id="openai-translation-key" type="password" value={openAiTranslationKey} placeholder={hasOpenAiTranslationKey ? "已保存，可替换" : "sk-..."} onChange={(event) => setOpenAiTranslationKey(event.target.value)} /><button className="icon-button danger-quiet" type="button" title="删除翻译 Key" onClick={() => void invoke("delete_openai_key_slot", { slot: "translation" })}>×</button></div>
+              <div className="key-input-row"><label htmlFor="openai-summary-key">阶段总结/问答 Key</label><input id="openai-summary-key" type="password" value={openAiSummaryKey} placeholder={hasOpenAiSummaryKey ? "已保存，可替换" : "sk-..."} onChange={(event) => setOpenAiSummaryKey(event.target.value)} /><button className="icon-button danger-quiet" type="button" title="删除阶段总结 Key" onClick={() => void invoke("delete_openai_key_slot", { slot: "summary" })}>×</button></div>
+              <div className="key-input-row"><label htmlFor="openai-lecture-summary-key">整课总结 Key</label><input id="openai-lecture-summary-key" type="password" value={openAiLectureSummaryKey} placeholder={hasOpenAiLectureSummaryKey ? "已保存，可替换" : "sk-..."} onChange={(event) => setOpenAiLectureSummaryKey(event.target.value)} /><button className="icon-button danger-quiet" type="button" title="删除整课总结 Key" onClick={() => void invoke("delete_openai_key_slot", { slot: "lecture-summary" })}>×</button></div>
 
               <label htmlFor="course-context">Syllabus 与课程说明</label>
               <textarea
@@ -2244,6 +2265,9 @@ export default function App() {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [courseMenuOpen, setCourseMenuOpen] = useState(false);
   const [hasOpenAiApiKey, setHasOpenAiApiKey] = useState(false);
+  const [hasOpenAiTranslationKey, setHasOpenAiTranslationKey] = useState(false);
+  const [hasOpenAiSummaryKey, setHasOpenAiSummaryKey] = useState(false);
+  const [hasOpenAiLectureSummaryKey, setHasOpenAiLectureSummaryKey] = useState(false);
   const [hasAlibabaApiKey, setHasAlibabaApiKey] = useState(false);
   const [hasAlibabaAsrApiKey, setHasAlibabaAsrApiKey] = useState(false);
   const [hasDeepgramApiKey, setHasDeepgramApiKey] = useState(false);
@@ -2387,12 +2411,18 @@ export default function App() {
       try {
         void Promise.all([
           invoke<boolean>("has_provider_api_key", { provider: "openai" }),
+          invoke<boolean>("has_openai_key_slot", { slot: "translation" }),
+          invoke<boolean>("has_openai_key_slot", { slot: "summary" }),
+          invoke<boolean>("has_openai_key_slot", { slot: "lecture-summary" }),
           invoke<boolean>("has_provider_api_key", { provider: "alibaba" }),
           invoke<boolean>("has_provider_api_key", { provider: "alibaba-asr" }),
           invoke<boolean>("has_provider_api_key", { provider: "deepgram" }),
-        ]).then(([openAiKeySaved, alibabaKeySaved, alibabaAsrKeySaved, deepgramKeySaved]) => {
+        ]).then(([openAiKeySaved, openAiTranslationSaved, openAiSummarySaved, openAiLectureSaved, alibabaKeySaved, alibabaAsrKeySaved, deepgramKeySaved]) => {
           if (cancelled) return;
           setHasOpenAiApiKey(openAiKeySaved);
+          setHasOpenAiTranslationKey(openAiTranslationSaved);
+          setHasOpenAiSummaryKey(openAiSummarySaved);
+          setHasOpenAiLectureSummaryKey(openAiLectureSaved);
           setHasAlibabaApiKey(alibabaKeySaved);
           setHasAlibabaAsrApiKey(alibabaAsrKeySaved);
           setHasDeepgramApiKey(deepgramKeySaved);
@@ -2986,6 +3016,9 @@ export default function App() {
     draft: CourseDraft,
     nextTerms: GlossaryTerm[],
     openAiApiKey: string,
+    openAiTranslationKey: string,
+    openAiSummaryKey: string,
+    openAiLectureSummaryKey: string,
     alibabaApiKey: string,
     alibabaAsrApiKey: string,
     deepgramApiKey: string,
@@ -3031,6 +3064,9 @@ export default function App() {
     if (openAiApiKey.trim()) {
       await invoke("save_provider_api_key", { provider: "openai", apiKey: openAiApiKey });
       setHasOpenAiApiKey(true);
+    }
+    for (const [slot, key] of [["translation", openAiTranslationKey], ["summary", openAiSummaryKey], ["lecture-summary", openAiLectureSummaryKey]] as const) {
+      if (key.trim()) await invoke("save_openai_key_slot", { slot, apiKey: key.trim() });
     }
     if (alibabaApiKey.trim()) {
       await invoke("save_provider_api_key", { provider: "alibaba", apiKey: alibabaApiKey });
@@ -3565,6 +3601,9 @@ export default function App() {
         initialTerms={terms}
         initialSummaryPreferences={summaryPreferences}
         hasOpenAiApiKey={hasOpenAiApiKey}
+        hasOpenAiTranslationKey={hasOpenAiTranslationKey}
+        hasOpenAiSummaryKey={hasOpenAiSummaryKey}
+        hasOpenAiLectureSummaryKey={hasOpenAiLectureSummaryKey}
         hasAlibabaApiKey={hasAlibabaApiKey}
         hasAlibabaAsrApiKey={hasAlibabaAsrApiKey}
         hasDeepgramApiKey={hasDeepgramApiKey}

@@ -328,6 +328,14 @@ pub(crate) fn read_provider_api_key_slot(provider: &str, slot: Option<&str>) -> 
     Entry::new(KEYRING_SERVICE, &slot_user).map_err(|error| format!("无法访问系统凭据库：{error}"))?.get_password().or_else(|_| read_provider_api_key(provider)).map_err(|_| format!("尚未保存 OpenAI {slot} API Key"))
 }
 
+fn openai_slot_entry(slot: &str) -> Result<Entry, String> {
+    if !matches!(slot, "translation" | "summary" | "lecture-summary" | "chat") {
+        return Err("OpenAI Key 用途无效".to_string());
+    }
+    Entry::new(KEYRING_SERVICE, &format!("openai-{slot}-api-key"))
+        .map_err(|error| format!("无法访问系统凭据库：{error}"))
+}
+
 pub(crate) fn compact_error(provider: &str, body: &str, status: reqwest::StatusCode) -> String {
     let label = provider_details(provider)
         .map(|details| details.0)
@@ -376,6 +384,23 @@ fn save_provider_api_key(provider: String, api_key: String) -> Result<(), String
     keyring_entry(&provider)?
         .set_password(trimmed)
         .map_err(|error| format!("无法保存到系统凭据库：{error}"))
+}
+
+#[tauri::command]
+fn has_openai_key_slot(slot: String) -> bool {
+    openai_slot_entry(&slot).map(|entry| entry.get_password().is_ok()).unwrap_or(false)
+}
+
+#[tauri::command]
+fn save_openai_key_slot(slot: String, api_key: String) -> Result<(), String> {
+    let trimmed = api_key.trim();
+    if !valid_provider_api_key("openai", trimmed) { return Err("OpenAI API Key 格式看起来不正确".to_string()); }
+    openai_slot_entry(&slot)?.set_password(trimmed).map_err(|error| format!("无法保存到系统凭据库：{error}"))
+}
+
+#[tauri::command]
+fn delete_openai_key_slot(slot: String) -> Result<(), String> {
+    openai_slot_entry(&slot)?.delete_credential().map_err(|error| format!("无法删除系统凭据：{error}"))
 }
 
 fn valid_provider_api_key(provider: &str, api_key: &str) -> bool {
@@ -1027,6 +1052,9 @@ pub fn run() {
             has_provider_api_key,
             save_api_key,
             save_provider_api_key,
+            has_openai_key_slot,
+            save_openai_key_slot,
+            delete_openai_key_slot,
             delete_api_key,
             delete_provider_api_key,
             create_realtime_call,
