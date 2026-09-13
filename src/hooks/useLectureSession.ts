@@ -953,7 +953,7 @@ export function useLectureSession(
     if (shouldAutoSummarize(pending)) void generateSummary(true, "topic");
   }, [generateSummary, segments, status, summaryPreferences.autoSummaryEnabled]);
 
-  const stop = useCallback(async () => {
+  const stop = useCallback(async (generateLectureSummary = true) => {
     if (endingRef.current) return;
     endingRef.current = true;
     setIsEnding(true);
@@ -990,7 +990,7 @@ export function useLectureSession(
       }
       segmentsRef.current = finalSegments;
       setSegments(finalSegments);
-      if (segmentsRef.current.some((segment) => segment.state !== "interim" && segment.english.trim())) {
+      if (generateLectureSummary && segmentsRef.current.some((segment) => segment.state !== "interim" && segment.english.trim())) {
         await generateSummary(false, "lecture");
       }
       if (isTauri() && lectureId !== null) {

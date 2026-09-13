@@ -2246,6 +2246,7 @@ export default function App() {
   const [translationSegment, setTranslationSegment] = useState<TranscriptSegment | null>(null);
   const [translationBusy, setTranslationBusy] = useState(false);
   const [translationError, setTranslationError] = useState<string | null>(null);
+  const [endChoiceOpen, setEndChoiceOpen] = useState(false);
   const [regeneratingLectureSummary, setRegeneratingLectureSummary] = useState(false);
   const [backfillProgress, setBackfillProgress] = useState<string | null>(null);
   const [historyOpen, setHistoryOpen] = useState(false);
@@ -3502,7 +3503,7 @@ export default function App() {
                 className="stop-button"
                 type="button"
                 disabled={session.isEnding || (session.isSummarizing && !session.isEnding)}
-                onClick={() => void session.stop()}
+                onClick={() => setEndChoiceOpen(true)}
               >
                 {session.isEnding ? <LoaderCircle className="spin" size={18} /> : <CircleStop size={18} />}
                 {session.isEnding ? "整课总结中" : "结束"}
@@ -3511,6 +3512,8 @@ export default function App() {
           )}
         </div>
       </footer>
+
+      {endChoiceOpen && <div className="dialog-backdrop" role="presentation"><section className="settings-dialog" role="dialog" aria-modal="true" aria-labelledby="end-choice-title"><header className="dialog-header"><div><p className="eyebrow">结束课堂</p><h2 id="end-choice-title">是否生成整课总结？</h2></div><button className="icon-button" type="button" title="取消" onClick={() => setEndChoiceOpen(false)}><X size={18} /></button></header><p>课堂转写和翻译都会保存；整课总结也可以稍后从历史记录中手动生成。</p><div className="dialog-actions"><button className="secondary-button" type="button" onClick={() => { setEndChoiceOpen(false); void session.stop(false); }}>结束并保存，不生成总结</button><button className="primary-button" type="button" onClick={() => { setEndChoiceOpen(false); void session.stop(true); }}><Sparkles size={15} />结束并生成整课总结</button></div></section></div>}
 
       {session.hasRecoveredLecture && (
         <div className="recovery-banner" role="status">
