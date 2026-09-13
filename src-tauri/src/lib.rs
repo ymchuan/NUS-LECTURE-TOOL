@@ -185,6 +185,40 @@ struct DeepgramConnectionTestResult {
     elapsed_ms: u128,
 }
 
+#[derive(Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
+struct AvailableModelsResult {
+    models: Vec<String>,
+}
+
+#[tauri::command]
+async fn list_available_models(
+    provider: String,
+    openai_base_url: Option<String>,
+    local_endpoint: Option<String>,
+) -> Result<AvailableModelsResult, String> {
+    let (url, api_key) = if provider == "local" {
+        (format!("{}/api/tags", local_translation_base_url(local_endpoint.as_deref().unwrap_or("http://127.0.0.1:11434"))?.trim_end_matches("/v1")), None)
+    } else if provider == "openai" {
+        (format!("{}/models", custom_openai_base_url(openai_base_url.as_deref())?), Some(read_provider_api_key("openai")?))
+    } else {
+        return Err("当前仅支持 OpenAI-compatible 和本地 Ollama 模型列表".to_string());
+    };
+    let client = if provider == "local" { build_local_http_client()? } else { build_http_client() };
+    let mut request = client.get(url);
+    if let Some(api_key) = api_key { request = request.bearer_auth(api_key); }
+    let response = request.send().await.map_err(|error| format!("获取模型列表失败：{error}"))?;
+    if !response.status().is_success() { return Err(format!("获取模型列表失败：HTTP {}", response.status())); }
+    let body: Value = response.json().await.map_err(|error| format!("模型列表格式无效：{error}"))?;
+    let models: Vec<String> = if provider == "local" {
+        body.get("models").and_then(Value::as_array).map(|items| items.iter().filter_map(|item| item.get("name").and_then(Value::as_str).map(str::to_owned)).collect()).unwrap_or_default()
+    } else {
+        body.get("data").and_then(Value::as_array).map(|items| items.iter().filter_map(|item| item.get("id").and_then(Value::as_str).map(str::to_owned)).collect()).unwrap_or_default()
+    };
+    if models.is_empty() { return Err("模型服务没有返回可用模型".to_string()); }
+    Ok(AvailableModelsResult { models })
+}
+
 #[derive(Clone, Serialize)]
 #[serde(rename_all = "camelCase")]
 struct TranslationEvent {
@@ -1066,6 +1100,7 @@ pub fn run() {
             finish_deepgram_asr,
             test_deepgram_connection,
             test_local_translation,
+            list_available_models,
             translate_segment,
             list_courses,
             save_course,

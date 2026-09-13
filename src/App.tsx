@@ -286,6 +286,32 @@ export function CourseDialog({
     text: string;
   } | null>(null);
   const deepgramTestRequestRef = useRef(0);
+  const [availableModels, setAvailableModels] = useState<string[]>([]);
+  const [localModels, setLocalModels] = useState<string[]>([]);
+  const [modelsLoading, setModelsLoading] = useState(false);
+  const [modelsStatus, setModelsStatus] = useState("");
+
+  const refreshAvailableModels = useCallback(async () => {
+    if (!isTauri()) { setModelsStatus("请在桌面应用中获取模型列表"); return; }
+    const provider = summaryPreferences.textProvider === "openai"
+      ? "openai"
+      : summaryPreferences.translationProvider === "local" ? "local" : null;
+    if (!provider) return;
+    const cacheKey = `lecture-assistant-models:${provider}:${provider === "local" ? summaryPreferences.localTranslationEndpoint : summaryPreferences.openaiBaseUrl}`;
+    setModelsLoading(true);
+    try {
+      const result = await invoke<{ models: string[] }>("list_available_models", { provider, openaiBaseUrl: summaryPreferences.openaiBaseUrl, localEndpoint: summaryPreferences.localTranslationEndpoint });
+      const models = [...new Set(result.models.filter(Boolean))];
+      if (provider === "local") setLocalModels(models); else setAvailableModels(models);
+      localStorage.setItem(cacheKey, JSON.stringify(models));
+      setModelsStatus(`已获取 ${models.length} 个模型`);
+    } catch (reason) {
+      const cached = localStorage.getItem(cacheKey);
+      try { if (provider === "local") setLocalModels(cached ? JSON.parse(cached) as string[] : []); else setAvailableModels(cached ? JSON.parse(cached) as string[] : []); } catch { if (provider === "local") setLocalModels([]); else setAvailableModels([]); }
+      setModelsStatus(cached ? "当前服务不可用，已使用缓存列表" : `获取失败：${String(reason)}`);
+    } finally { setModelsLoading(false); }
+  }, [summaryPreferences]);
+
 
   useEffect(() => {
     if (!open) return;
@@ -894,6 +920,7 @@ export function CourseDialog({
                       })}
                     />
                     <datalist id="local-translation-model-options">
+                      {localModels.map((model) => <option value={model} key={`local-${model}`} />)}
                       <option value="translategemma:4b" />
                       <option value="qwen3:4b" />
                       <option value="qwen3:4b-instruct-2507-q4_K_M" />
@@ -1001,6 +1028,7 @@ export function CourseDialog({
                 >
                   {summaryPreferences.textProvider === "openai" ? (
                     <>
+                      {availableModels.map((model) => <option value={model} key={`summary-${model}`}>{model} · 在线</option>)}
                       <option value="gpt-5.4-mini">gpt-5.4-mini</option>
                       <option value="gpt-5.4-nano">gpt-5.4-nano</option>
                     </>
@@ -1027,6 +1055,7 @@ export function CourseDialog({
                 >
                   {summaryPreferences.textProvider === "openai" ? (
                     <>
+                      {availableModels.map((model) => <option value={model} key={`lecture-${model}`}>{model} · 在线</option>)}
                       <option value="gpt-5.4-mini">gpt-5.4-mini · 推荐</option>
                       <option value="gpt-5.4-nano">gpt-5.4-nano</option>
                     </>
@@ -1039,6 +1068,7 @@ export function CourseDialog({
                   )}
                 </select>
               </label>
+              {((summaryPreferences.textProvider === "openai") || (summaryPreferences.translationProvider === "local")) && <div className="local-model-status" role="status"><button className="secondary-button" type="button" onClick={() => void refreshAvailableModels()} disabled={modelsLoading}>{modelsLoading ? "获取模型中…" : "刷新可用模型"}</button>{modelsStatus && <span>{modelsStatus}</span>}</div>}
               <label className="setting-toggle">
                 <span>
                   <strong>自动识别主题边界</strong>
