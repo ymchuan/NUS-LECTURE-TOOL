@@ -6,6 +6,7 @@ import {
   discardSupersededInterims,
   finalizeTranscript,
   finishTranslation,
+  replaceTranslation,
   upsertTranscriptDelta,
   upsertTranscriptText,
 } from "../lib/transcript";
@@ -168,6 +169,8 @@ export function useLectureSession(
   const [summaryStatus, setSummaryStatus] = useState<"idle" | "generating" | "searching">("idle");
   const [isEnding, setIsEnding] = useState(false);
   const [asrLatencyMs, setAsrLatencyMs] = useState<number | null>(null);
+  const [translationLatencyMs, setTranslationLatencyMs] = useState<number | null>(null);
+  const [translationTotalMs, setTranslationTotalMs] = useState<number | null>(null);
   const [lectureId, setLectureId] = useState<number | null>(null);
 
   const segmentsRef = useRef<TranscriptSegment[]>([]);
@@ -202,6 +205,10 @@ export function useLectureSession(
   const demoTimeoutsRef = useRef<number[]>([]);
   const documentKeywordsRef = useRef<string[]>([]);
   const pendingTranslationsRef = useRef(new Set<Promise<void>>());
+  const translationStartedAtRef = useRef(new Map<string, number>());
+  const translationFirstTextAtRef = useRef(new Map<string, number>());
+  const interimTranslationTimersRef = useRef(new Map<string, number>());
+  const interimTranslationActiveRef = useRef(new Set<string>());
 
   const updateStatus = useCallback((next: SessionStatus) => {
     statusRef.current = next;
@@ -360,13 +367,17 @@ export function useLectureSession(
   }, []);
 
   const requestTranslation = useCallback(
-    async (segmentId: string, english: string) => {
+    async (segmentId: string, english: string, interim = false) => {
       const completed = segmentsRef.current.filter(
         (segment) => segment.id !== segmentId && segment.state !== "interim",
       );
       const previousEnglish = completed[completed.length - 1]?.english ?? null;
 
       try {
+        if (interimTranslationActiveRef.current.has(segmentId)) return;
+        if (interim) interimTranslationActiveRef.current.add(segmentId);
+        updateSegments((current) => replaceTranslation(current, segmentId, ""));
+        translationStartedAtRef.current.set(segmentId, Date.now());
         await invoke("translate_segment", {
           request: {
             segmentId,
@@ -386,13 +397,15 @@ export function useLectureSession(
         if (lectureIdRef.current === null && statusRef.current === "idle") return;
         updateSegments((current) => finishTranslation(current, segmentId, true));
         setError(String(reason));
+      } finally {
+        if (interim) interimTranslationActiveRef.current.delete(segmentId);
       }
     },
     [settings.courseName, settings.glossary, summaryPreferences, updateSegments],
   );
 
-  const queueTranslation = useCallback((segmentId: string, english: string) => {
-    const task = requestTranslation(segmentId, english);
+  const queueTranslation = useCallback((segmentId: string, english: string, interim = false) => {
+    const task = requestTranslation(segmentId, english, interim);
     pendingTranslationsRef.current.add(task);
     void task.finally(() => pendingTranslationsRef.current.delete(task));
   }, [requestTranslation]);
@@ -445,10 +458,21 @@ export function useLectureSession(
     const translationListener = listen<TranslationEvent>("translation-event", ({ payload }) => {
       if (lectureIdRef.current === null && statusRef.current === "idle") return;
       if (payload.kind === "delta") {
+        const startedAt = translationStartedAtRef.current.get(payload.segmentId);
+        if (startedAt !== undefined && !translationFirstTextAtRef.current.has(payload.segmentId)) {
+          translationFirstTextAtRef.current.set(payload.segmentId, Date.now());
+          setTranslationLatencyMs(Math.max(0, Date.now() - startedAt));
+        }
         updateSegments((current) =>
           appendTranslation(current, payload.segmentId, payload.text),
         );
       } else {
+        const startedAt = translationStartedAtRef.current.get(payload.segmentId);
+        if (startedAt !== undefined && payload.kind === "done") {
+          setTranslationTotalMs(Math.max(0, Date.now() - startedAt));
+        }
+        translationStartedAtRef.current.delete(payload.segmentId);
+        translationFirstTextAtRef.current.delete(payload.segmentId);
         updateSegments((current) =>
           finishTranslation(current, payload.segmentId, payload.kind === "error"),
         );
@@ -470,6 +494,15 @@ export function useLectureSession(
             payload.itemId,
           ),
         );
+        if (payload.text.trim().length >= 16 && !interimTranslationActiveRef.current.has(payload.itemId)) {
+          const previousTimer = interimTranslationTimersRef.current.get(payload.itemId);
+          if (previousTimer !== undefined) window.clearTimeout(previousTimer);
+          const timer = window.setTimeout(() => {
+            interimTranslationTimersRef.current.delete(payload.itemId);
+            queueTranslation(payload.itemId, payload.text.trim(), true);
+          }, 900);
+          interimTranslationTimersRef.current.set(payload.itemId, timer);
+        }
       } else if (payload.kind === "final") {
         const transcript = payload.text.trim();
         if (!transcript || finalizedAsrItemsRef.current.has(payload.itemId)) return;
@@ -477,6 +510,9 @@ export function useLectureSession(
         updateSegments((current) =>
           finalizeTranscript(current, payload.itemId, transcript, payload.startMs),
         );
+        const interimTimer = interimTranslationTimersRef.current.get(payload.itemId);
+        if (interimTimer !== undefined) window.clearTimeout(interimTimer);
+        interimTranslationTimersRef.current.delete(payload.itemId);
         queueTranslation(payload.itemId, transcript);
       } else {
         streamingAsrActiveRef.current = null;
@@ -497,6 +533,9 @@ export function useLectureSession(
 
   const cleanupMedia = useCallback(() => {
     stopTimer();
+    interimTranslationTimersRef.current.forEach((timer) => window.clearTimeout(timer));
+    interimTranslationTimersRef.current.clear();
+    interimTranslationActiveRef.current.clear();
     demoTimeoutsRef.current.forEach((timeout) => window.clearTimeout(timeout));
     demoTimeoutsRef.current = [];
     if (animationFrameRef.current !== null) {
@@ -553,6 +592,10 @@ export function useLectureSession(
       documentKeywordsRef.current = [];
       pendingTranslationsRef.current.clear();
       setAsrLatencyMs(null);
+      setTranslationLatencyMs(null);
+      setTranslationTotalMs(null);
+      translationStartedAtRef.current.clear();
+      translationFirstTextAtRef.current.clear();
       setElapsedMs(0);
       elapsedMsRef.current = 0;
       startedAtRef.current = Date.now();
@@ -950,6 +993,8 @@ export function useLectureSession(
     elapsedMs,
     audioLevel,
     asrLatencyMs,
+    translationLatencyMs,
+    translationTotalMs,
     error,
     summaryStatus,
     isSummarizing: summaryStatus !== "idle",

@@ -17,6 +17,7 @@ import {
   Globe2,
   History,
   ListChecks,
+  Languages,
   LoaderCircle,
   LocateFixed,
   Maximize2,
@@ -142,6 +143,21 @@ function formatTimestamp(milliseconds: number) {
   const minutes = Math.floor(totalSeconds / 60);
   const seconds = totalSeconds % 60;
   return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+}
+
+function shortModelName(model: string) {
+  const normalized = displayModelName(model);
+  if (!normalized) return "--";
+  return normalized.length > 16 ? `${normalized.slice(0, 14)}…` : normalized;
+}
+
+function displayModelName(model: string) {
+  return model.trim().replace(/^translategemma(?=:|$)/, "gemma");
+}
+
+function latencyClass(milliseconds: number | null) {
+  if (milliseconds === null) return "waiting";
+  return milliseconds < 1_000 ? "fast" : milliseconds < 1_800 ? "moderate" : "slow";
 }
 
 const statusLabels: Record<SessionStatus, string> = {
@@ -2255,6 +2271,11 @@ export default function App() {
   const lastSlideQueryRef = useRef("");
   const slideRequestRef = useRef(0);
   const session = useLectureSession(settings, summaryPreferences);
+  const [showPerformanceDetails, setShowPerformanceDetails] = useState(false);
+  const asrModel = summaryPreferences.transcriptionModel;
+  const translationModel = summaryPreferences.translationProvider === "local"
+    ? summaryPreferences.localTranslationModel
+    : summaryPreferences.translationModel;
   const restoreLecture = session.restoreLecture;
   const restoreLectureRef = useRef(restoreLecture);
   restoreLectureRef.current = restoreLecture;
@@ -3277,24 +3298,35 @@ export default function App() {
               <h1 id="transcript-heading">实时记录</h1>
             </div>
             <div className="transcript-meta">
-              {(summaryPreferences.transcriptionProvider === "alibaba"
-                || summaryPreferences.transcriptionProvider === "deepgram") && (
-                <span
-                  className={`latency-badge ${
-                    session.asrLatencyMs === null
-                      ? "waiting"
-                      : session.asrLatencyMs < 1_000
-                        ? "fast"
-                        : session.asrLatencyMs < 1_800
-                          ? "moderate"
-                          : "slow"
-                  }`}
-                  title="最近一句从开始说话到首个识别结果的时间"
-                >
-                  首字 {session.asrLatencyMs === null
-                    ? "--"
-                    : `${(session.asrLatencyMs / 1_000).toFixed(1)}s`}
-                </span>
+              {isActive && (
+                <div className="performance-status">
+                  <button
+                    className="performance-summary"
+                    type="button"
+                    aria-expanded={showPerformanceDetails}
+                    aria-controls="performance-details"
+                    onClick={() => setShowPerformanceDetails((current) => !current)}
+                    title="查看当前课堂使用的模型和延迟"
+                  >
+                    <Mic size={12} />
+                    <span>{shortModelName(asrModel)}</span>
+                    <strong className={latencyClass(session.asrLatencyMs)}>
+                      {session.asrLatencyMs === null ? "--" : `${(session.asrLatencyMs / 1_000).toFixed(1)}s`}
+                    </strong>
+                    <Languages size={12} />
+                    <span>{shortModelName(translationModel)}</span>
+                    <strong className={latencyClass(session.translationLatencyMs)}>
+                      {session.translationLatencyMs === null ? "--" : `${(session.translationLatencyMs / 1_000).toFixed(1)}s`}
+                    </strong>
+                    <ChevronDown size={12} className={showPerformanceDetails ? "performance-chevron expanded" : "performance-chevron"} />
+                  </button>
+                  {showPerformanceDetails && (
+                    <div className="performance-details" id="performance-details">
+                      <div><Mic size={13} /><span>语音识别</span><small title={asrModel}>{asrModel}</small><b>首字 {session.asrLatencyMs === null ? "--" : `${(session.asrLatencyMs / 1_000).toFixed(1)}s`}</b></div>
+                      <div><Languages size={13} /><span>实时翻译</span><small title={translationModel}>{displayModelName(translationModel)}</small><b>首字 {session.translationLatencyMs === null ? "--" : `${(session.translationLatencyMs / 1_000).toFixed(1)}s`} · 完整 {session.translationTotalMs === null ? "--" : `${(session.translationTotalMs / 1_000).toFixed(1)}s`}</b></div>
+                    </div>
+                  )}
+                </div>
               )}
               {(slideMatch || lectureDocuments.length > 0) && (
                 <button

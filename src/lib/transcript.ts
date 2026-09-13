@@ -103,6 +103,16 @@ export function appendTranslation(
   );
 }
 
+export function replaceTranslation(
+  segments: TranscriptSegment[],
+  segmentId: string,
+  chinese: string,
+): TranscriptSegment[] {
+  return segments.map((segment) =>
+    segment.id === segmentId ? { ...segment, chinese } : segment,
+  );
+}
+
 export function finishTranslation(
   segments: TranscriptSegment[],
   segmentId: string,
