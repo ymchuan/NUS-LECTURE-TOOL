@@ -578,10 +578,6 @@ export function CourseDialog({
                   />
                 </div>
               </div>
-              <div className="key-input-row"><label htmlFor="openai-translation-key">翻译 Key</label><input id="openai-translation-key" type="password" value={openAiTranslationKey} placeholder={hasOpenAiTranslationKey ? "已保存，可替换" : "sk-..."} onChange={(event) => setOpenAiTranslationKey(event.target.value)} /><button className="icon-button danger-quiet" type="button" title="删除翻译 Key" onClick={() => void invoke("delete_openai_key_slot", { slot: "translation" })}>×</button></div>
-              <div className="key-input-row"><label htmlFor="openai-summary-key">阶段总结/问答 Key</label><input id="openai-summary-key" type="password" value={openAiSummaryKey} placeholder={hasOpenAiSummaryKey ? "已保存，可替换" : "sk-..."} onChange={(event) => setOpenAiSummaryKey(event.target.value)} /><button className="icon-button danger-quiet" type="button" title="删除阶段总结 Key" onClick={() => void invoke("delete_openai_key_slot", { slot: "summary" })}>×</button></div>
-              <div className="key-input-row"><label htmlFor="openai-lecture-summary-key">整课总结 Key</label><input id="openai-lecture-summary-key" type="password" value={openAiLectureSummaryKey} placeholder={hasOpenAiLectureSummaryKey ? "已保存，可替换" : "sk-..."} onChange={(event) => setOpenAiLectureSummaryKey(event.target.value)} /><button className="icon-button danger-quiet" type="button" title="删除整课总结 Key" onClick={() => void invoke("delete_openai_key_slot", { slot: "lecture-summary" })}>×</button></div>
-
               <label htmlFor="course-context">Syllabus 与课程说明</label>
               <textarea
                 id="course-context"
@@ -638,7 +634,6 @@ export function CourseDialog({
                   </button>
                 </div>
               </div>
-
               <div className="glossary-table">
                 {visibleTerms.length ? (
                   visibleTerms.map(({ item: term, index }) => (
@@ -1126,6 +1121,9 @@ export function CourseDialog({
                   </button>
                 )}
               </div>
+              <div className="key-input-row"><label htmlFor="openai-translation-key">翻译 Key</label><input id="openai-translation-key" type="password" value={openAiTranslationKey} placeholder={hasOpenAiTranslationKey ? "已保存，可替换" : "sk-..."} onChange={(event) => setOpenAiTranslationKey(event.target.value)} /><button className="icon-button danger-quiet" type="button" title="删除翻译 Key" onClick={() => void invoke("delete_openai_key_slot", { slot: "translation" })}>×</button></div>
+              <div className="key-input-row"><label htmlFor="openai-summary-key">阶段总结/问答 Key</label><input id="openai-summary-key" type="password" value={openAiSummaryKey} placeholder={hasOpenAiSummaryKey ? "已保存，可替换" : "sk-..."} onChange={(event) => setOpenAiSummaryKey(event.target.value)} /><button className="icon-button danger-quiet" type="button" title="删除阶段总结 Key" onClick={() => void invoke("delete_openai_key_slot", { slot: "summary" })}>×</button></div>
+              <div className="key-input-row"><label htmlFor="openai-lecture-summary-key">整课总结 Key</label><input id="openai-lecture-summary-key" type="password" value={openAiLectureSummaryKey} placeholder={hasOpenAiLectureSummaryKey ? "已保存，可替换" : "sk-..."} onChange={(event) => setOpenAiLectureSummaryKey(event.target.value)} /><button className="icon-button danger-quiet" type="button" title="删除整课总结 Key" onClick={() => void invoke("delete_openai_key_slot", { slot: "lecture-summary" })}>×</button></div>
               <label className="model-select-row" htmlFor="openai-base-url">
                 <span><strong>OpenAI-compatible 地址</strong><small>可填写兼容 OpenAI 接口的服务地址</small></span>
                 <input id="openai-base-url" type="url" value={summaryPreferences.openaiBaseUrl} onChange={(event) => setSummaryPreferences({ ...summaryPreferences, openaiBaseUrl: event.target.value })} />
