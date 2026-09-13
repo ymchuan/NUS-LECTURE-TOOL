@@ -512,14 +512,14 @@ pub fn delete_lecture_document(
     } else {
         None
     };
+    if let Some(path) = safe_path {
+        fs::remove_file(path).map_err(|error| format!("无法删除 Slides 原文件：{error}"))?;
+    }
     let changed = connection
         .execute("DELETE FROM course_documents WHERE id = ?1", [document_id])
         .map_err(|error| error.to_string())?;
     if changed == 0 {
         return Err("没有找到这份 Slides".to_string());
-    }
-    if let Some(path) = safe_path {
-        fs::remove_file(path).map_err(|error| format!("无法删除 Slides 原文件：{error}"))?;
     }
     Ok(())
 }

@@ -939,39 +939,47 @@ fn delete_lecture_inner(
         return Err("只能删除已经结束的课堂记录".to_string());
     }
 
-    let paths = {
-        let mut statement = connection
-            .prepare("SELECT stored_path FROM course_documents WHERE lecture_id = ?1")
-            .map_err(|error| error.to_string())?;
-        let rows = statement
-            .query_map([lecture_id], |row| row.get::<_, String>(0))
-            .map_err(|error| error.to_string())?
-            .collect::<Result<Vec<_>, _>>()
-            .map_err(|error| error.to_string())?;
-        rows.into_iter().map(PathBuf::from).collect::<Vec<_>>()
-    };
+    let paths = lecture_document_paths(connection, lecture_id)?;
     connection
         .execute("DELETE FROM lectures WHERE id = ?1", [lecture_id])
         .map_err(|error| error.to_string())?;
     Ok((title, paths))
 }
 
+fn lecture_document_paths(connection: &Connection, lecture_id: i64) -> Result<Vec<PathBuf>, String> {
+    let mut statement = connection
+        .prepare("SELECT stored_path FROM course_documents WHERE lecture_id = ?1")
+        .map_err(|error| error.to_string())?;
+    let paths = statement
+        .query_map([lecture_id], |row| row.get::<_, String>(0))
+        .map_err(|error| error.to_string())?
+        .map(|row| row.map(PathBuf::from).map_err(|error| error.to_string()))
+        .collect();
+    paths
+}
+
 #[tauri::command]
 pub fn delete_lecture(database: State<'_, Database>, lecture_id: i64) -> Result<String, String> {
-    let (title, paths) = {
-        let mut connection = lock_database(&database)?;
-        delete_lecture_inner(&mut connection, lecture_id)?
+    let paths = {
+        let connection = lock_database(&database)?;
+        lecture_document_paths(&connection, lecture_id)?
     };
     let directories = paths
         .iter()
         .filter_map(|path| path.parent().map(Path::to_path_buf))
         .collect::<HashSet<_>>();
     for path in paths {
-        let _ = fs::remove_file(path);
+        if path.exists() {
+            fs::remove_file(&path).map_err(|error| format!("无法删除课堂文件：{error}"))?;
+        }
     }
     for directory in directories {
         let _ = fs::remove_dir(directory);
     }
+    let title = {
+        let mut connection = lock_database(&database)?;
+        delete_lecture_inner(&mut connection, lecture_id)?.0
+    };
     Ok(title)
 }
 

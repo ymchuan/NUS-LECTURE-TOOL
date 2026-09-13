@@ -370,11 +370,12 @@ pub async fn start_alibaba_asr(
         .as_str()
         .into_client_request()
         .map_err(|error| format!("无法创建阿里实时转写请求：{error}"))?;
-    websocket_request.headers_mut().insert(
-        "Authorization",
-        HeaderValue::from_str(&format!("Bearer {api_key}"))
-            .map_err(|error| format!("阿里实时转写授权信息无效：{error}"))?,
-    );
+    let mut authorization = HeaderValue::from_str(&format!("Bearer {api_key}"))
+        .map_err(|error| format!("阿里实时转写授权信息无效：{error}"))?;
+    authorization.set_sensitive(true);
+    websocket_request
+        .headers_mut()
+        .insert("Authorization", authorization);
     websocket_request.headers_mut().insert(
         "User-Agent",
         HeaderValue::from_static("nus-lecture-assistant/0.12.12"),
@@ -661,20 +662,25 @@ pub async fn send_alibaba_asr_audio(
 
 #[tauri::command]
 pub async fn finish_alibaba_asr(state: State<'_, AlibabaAsrState>) -> Result<(), String> {
-    let session = state.session.lock().await.take();
-    let Some(session) = session else {
-        return Ok(());
+    let finish_rx = {
+        let session = state.session.lock().await;
+        let Some(session) = session.as_ref() else {
+            return Ok(());
+        };
+        let (finish_tx, finish_rx) = oneshot::channel();
+        session
+            .command_tx
+            .send(AsrCommand::Finish(finish_tx))
+            .await
+            .map_err(|_| "阿里实时转写会话已关闭".to_string())?;
+        finish_rx
     };
-    let (finish_tx, finish_rx) = oneshot::channel();
-    session
-        .command_tx
-        .send(AsrCommand::Finish(finish_tx))
-        .await
-        .map_err(|_| "阿里实时转写会话已关闭".to_string())?;
-    tokio::time::timeout(Duration::from_secs(12), finish_rx)
+    let result = tokio::time::timeout(Duration::from_secs(12), finish_rx)
         .await
         .map_err(|_| "等待阿里实时转写结束超时".to_string())?
-        .map_err(|_| "阿里实时转写结束信号丢失".to_string())?
+        .map_err(|_| "阿里实时转写结束信号丢失".to_string())?;
+    state.session.lock().await.take();
+    result
 }
 
 #[cfg(test)]

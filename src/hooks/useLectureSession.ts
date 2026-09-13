@@ -183,6 +183,7 @@ export function useLectureSession(
   const endingRef = useRef(false);
   const peerRef = useRef<RTCPeerConnection | null>(null);
   const channelRef = useRef<RTCDataChannel | null>(null);
+  const openAiFinalizationRef = useRef<(() => void) | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
   const audioSourceRef = useRef<MediaStreamAudioSourceNode | null>(null);
@@ -202,6 +203,7 @@ export function useLectureSession(
   const startedAtRef = useRef(0);
   const timerRef = useRef<number | null>(null);
   const persistTimerRef = useRef<number | null>(null);
+  const persistenceGenerationRef = useRef(0);
   const demoTimeoutsRef = useRef<number[]>([]);
   const documentKeywordsRef = useRef<string[]>([]);
   const pendingTranslationsRef = useRef(new Set<Promise<void>>());
@@ -254,11 +256,21 @@ export function useLectureSession(
   const schedulePersistence = useCallback(() => {
     if (!isTauri() || lectureIdRef.current === null) return;
     if (persistTimerRef.current !== null) return;
+    const generation = persistenceGenerationRef.current;
     persistTimerRef.current = window.setTimeout(() => {
       persistTimerRef.current = null;
+      if (generation !== persistenceGenerationRef.current) return;
       void persistSnapshot().catch((reason) => setError(`自动保存失败：${String(reason)}`));
     }, 650);
   }, [persistSnapshot]);
+
+  const cancelPendingPersistence = useCallback(() => {
+    persistenceGenerationRef.current += 1;
+    if (persistTimerRef.current !== null) {
+      window.clearTimeout(persistTimerRef.current);
+      persistTimerRef.current = null;
+    }
+  }, []);
 
   useEffect(() => {
     schedulePersistence();
@@ -441,6 +453,8 @@ export function useLectureSession(
         if (!transcript) return;
         updateSegments((current) => finalizeTranscript(current, itemId, transcript, now));
         queueTranslation(itemId, transcript);
+        openAiFinalizationRef.current?.();
+        openAiFinalizationRef.current = null;
       }
 
       if (type === "error") {
@@ -619,6 +633,16 @@ export function useLectureSession(
           });
         }
       } catch (reason) {
+        if (!isResuming && lectureIdRef.current !== null) {
+          await invoke("finish_lecture", {
+            lectureId: lectureIdRef.current,
+            elapsedMs: elapsedMsRef.current,
+            endedAt: Date.now(),
+          }).then(() => invoke("delete_lecture", { lectureId: lectureIdRef.current }))
+            .catch(() => undefined);
+          lectureIdRef.current = null;
+          setLectureId(null);
+        }
         updateStatus("error");
         setError(`无法创建课堂记录：${String(reason)}`);
         return null;
@@ -933,6 +957,7 @@ export function useLectureSession(
     if (endingRef.current) return;
     endingRef.current = true;
     setIsEnding(true);
+    cancelPendingPersistence();
     const lectureId = lectureIdRef.current;
     await pauseTransitionRef.current;
     if (
@@ -943,7 +968,14 @@ export function useLectureSession(
       streamRef.current.getAudioTracks().forEach((track) => {
         track.enabled = false;
       });
-      await new Promise((resolve) => window.setTimeout(resolve, 800));
+      const finalized = new Promise<void>((resolve) => {
+        openAiFinalizationRef.current = resolve;
+      });
+      channelRef.current?.send(JSON.stringify({ type: "input_audio_buffer.commit" }));
+      await Promise.race([
+        finalized,
+        new Promise<void>((resolve) => window.setTimeout(resolve, 3_000)),
+      ]);
     }
     await finishStreamingAsr().catch((reason) => setError(String(reason)));
     cleanupMedia();
@@ -984,7 +1016,7 @@ export function useLectureSession(
       endingRef.current = false;
       setIsEnding(false);
     }
-  }, [cleanupMedia, finishStreamingAsr, generateSummary, persistSnapshot, updateStatus, waitForPendingTranslations]);
+  }, [cancelPendingPersistence, cleanupMedia, finishStreamingAsr, generateSummary, persistSnapshot, updateStatus, waitForPendingTranslations]);
 
   return {
     status,
