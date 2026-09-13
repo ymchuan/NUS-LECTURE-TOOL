@@ -68,7 +68,7 @@ import {
   slidesMimeType,
 } from "./lib/powerpoint";
 import { buildLectureSummaryInput } from "./lib/summary";
-import { translateArchivedSegment } from "./lib/translation";
+import { translateArchivedSegment, type ArchivedTranslationTarget } from "./lib/translation";
 import type {
   Course,
   ChatAnswer,
@@ -2246,6 +2246,7 @@ export default function App() {
   const [translationSegment, setTranslationSegment] = useState<TranscriptSegment | null>(null);
   const [translationBusy, setTranslationBusy] = useState(false);
   const [translationError, setTranslationError] = useState<string | null>(null);
+  const [translationTarget, setTranslationTarget] = useState<ArchivedTranslationTarget>("configured");
   const [endChoiceOpen, setEndChoiceOpen] = useState(false);
   const [regeneratingLectureSummary, setRegeneratingLectureSummary] = useState(false);
   const [backfillProgress, setBackfillProgress] = useState<string | null>(null);
@@ -2314,7 +2315,7 @@ export default function App() {
         setTranslationSegment(next);
         setArchivedLecture((current) => current ? { ...current, segments: current.segments.map((item) => item.id === next.id ? next : item) } : current);
       };
-      const updated = await translateArchivedSegment(translationSegment, archivedLecture.segments, settings, summaryPreferences, update);
+      const updated = await translateArchivedSegment(translationSegment, archivedLecture.segments, settings, summaryPreferences, translationTarget, update);
       const segments = archivedLecture.segments.map((item) => item.id === updated.id ? updated : item);
       await invoke("save_lecture_snapshot", { snapshot: { lectureId: archivedLecture.lectureId, elapsedMs: archivedLecture.elapsedMs, status: archivedLecture.status, segments, summaries: archivedLecture.summaries } });
       setArchivedLecture((current) => current ? { ...current, segments } : current);
@@ -3390,7 +3391,7 @@ export default function App() {
                   key={segment.id}
                   bookmarked={bookmarks.some((bookmark) => bookmark.segmentId === segment.id)}
                   highlighted={highlightedSegmentId === segment.id}
-                  onRetry={isViewingHistory ? () => { setTranslationSegment(segment); setTranslationError(null); } : undefined}
+                  onRetry={isViewingHistory ? () => { setTranslationSegment(segment); setTranslationTarget("configured"); setTranslationError(null); } : undefined}
                 />
               ))
             ) : (
@@ -3414,7 +3415,7 @@ export default function App() {
               </div>
             )}
           </div>
-          <TranslationDialog segment={translationSegment} busy={translationBusy} error={translationError} onTranslate={() => void retryArchivedTranslation()} onClose={() => { if (!translationBusy) setTranslationSegment(null); }} />
+          <TranslationDialog segment={translationSegment} busy={translationBusy} error={translationError} target={translationTarget} onTargetChange={setTranslationTarget} onTranslate={() => void retryArchivedTranslation()} onClose={() => { if (!translationBusy) setTranslationSegment(null); }} />
           {!followingLatest && !isViewingHistory && (
             <button className="return-latest-button" type="button" onClick={jumpToLatest}>
               <ChevronDownCircle size={17} />
