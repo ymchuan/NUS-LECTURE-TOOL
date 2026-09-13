@@ -404,7 +404,6 @@ export function useLectureSession(
               : summaryPreferences.translationModel,
             localEndpoint: summaryPreferences.localTranslationEndpoint,
             openaiBaseUrl: summaryPreferences.openaiBaseUrl,
-            keySlot: "translation",
           },
         });
       } catch (reason) {
@@ -926,7 +925,6 @@ export function useLectureSession(
             model: summaryModelForKind(summaryPreferences, kind),
             webSearch: summaryPreferences.webSearchEnabled,
             openaiBaseUrl: summaryPreferences.openaiBaseUrl,
-            keySlot: kind === "lecture" ? "lecture-summary" : "summary",
           },
         });
         updateSummaries((current) => {

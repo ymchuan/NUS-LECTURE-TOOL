@@ -23,7 +23,7 @@ export async function translateArchivedSegment(segment: TranscriptSegment, segme
   try {
     onUpdate({ ...segment, state: "translating" });
     await Promise.race([
-      Promise.all([stream, invoke("translate_segment", { request: { segmentId: requestId, english: segment.english, previousEnglish: previous?.english ?? null, courseName: settings.courseName, glossary: settings.glossary, provider, workspaceId: preferences.alibabaWorkspaceId, model, localEndpoint: preferences.localTranslationEndpoint, openaiBaseUrl: preferences.openaiBaseUrl, keySlot: "translation" } })]),
+      Promise.all([stream, invoke("translate_segment", { request: { segmentId: requestId, english: segment.english, previousEnglish: previous?.english ?? null, courseName: settings.courseName, glossary: settings.glossary, provider, workspaceId: preferences.alibabaWorkspaceId, model, localEndpoint: preferences.localTranslationEndpoint, openaiBaseUrl: preferences.openaiBaseUrl } })]),
       new Promise<never>((_, reject) => window.setTimeout(() => reject(new Error("翻译超时，请稍后重试")), 120_000)),
     ]);
     if (!text.trim()) throw new Error("翻译服务没有返回文本");
