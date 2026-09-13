@@ -403,6 +403,8 @@ export function useLectureSession(
               ? summaryPreferences.localTranslationModel
               : summaryPreferences.translationModel,
             localEndpoint: summaryPreferences.localTranslationEndpoint,
+            openaiBaseUrl: summaryPreferences.openaiBaseUrl,
+            keySlot: "translation",
           },
         });
       } catch (reason) {
@@ -923,6 +925,8 @@ export function useLectureSession(
             workspaceId: summaryPreferences.alibabaWorkspaceId,
             model: summaryModelForKind(summaryPreferences, kind),
             webSearch: summaryPreferences.webSearchEnabled,
+            openaiBaseUrl: summaryPreferences.openaiBaseUrl,
+            keySlot: kind === "lecture" ? "lecture-summary" : "summary",
           },
         });
         updateSummaries((current) => {
@@ -991,6 +995,10 @@ export function useLectureSession(
       segmentsRef.current = finalSegments;
       setSegments(finalSegments);
       if (generateLectureSummary && segmentsRef.current.some((segment) => segment.state !== "interim" && segment.english.trim())) {
+        const summaryWaitStartedAt = Date.now();
+        while (summaryInFlightRef.current && Date.now() - summaryWaitStartedAt < 30_000) {
+          await new Promise((resolve) => window.setTimeout(resolve, 100));
+        }
         await generateSummary(false, "lecture");
       }
       if (isTauri() && lectureId !== null) {

@@ -165,6 +165,10 @@ struct TranslationRequest {
     workspace_id: String,
     model: String,
     local_endpoint: Option<String>,
+    #[serde(default)]
+    openai_base_url: Option<String>,
+    #[serde(default)]
+    key_slot: Option<String>,
 }
 
 #[derive(Serialize)]
@@ -260,6 +264,15 @@ pub(crate) fn provider_base_url(provider: &str, workspace_id: &str) -> Result<St
     }
 }
 
+pub(crate) fn custom_openai_base_url(value: Option<&str>) -> Result<String, String> {
+    let value = value.unwrap_or(OPENAI_BASE_URL).trim().trim_end_matches('/');
+    let url = reqwest::Url::parse(value).map_err(|_| "OpenAI 兼容地址格式无效".to_string())?;
+    if !matches!(url.scheme(), "http" | "https") || !url.username().is_empty() || url.password().is_some() || url.query().is_some() || url.fragment().is_some() || url.path().is_empty() {
+        return Err("OpenAI 兼容地址必须是无凭据、无参数的 HTTP/HTTPS 地址".to_string());
+    }
+    Ok(value.to_string())
+}
+
 fn local_translation_base_url(endpoint: &str) -> Result<String, String> {
     if endpoint.len() > 300 {
         return Err("本地翻译服务地址过长".to_string());
@@ -306,6 +319,13 @@ pub(crate) fn read_provider_api_key(provider: &str) -> Result<String, String> {
     keyring_entry(provider)?
         .get_password()
         .map_err(|_| format!("尚未保存 {label} API Key"))
+}
+
+pub(crate) fn read_provider_api_key_slot(provider: &str, slot: Option<&str>) -> Result<String, String> {
+    let Some(slot) = slot.filter(|value| !value.trim().is_empty()) else { return read_provider_api_key(provider); };
+    if provider != "openai" { return read_provider_api_key(provider); }
+    let slot_user = format!("openai-{slot}-api-key");
+    Entry::new(KEYRING_SERVICE, &slot_user).map_err(|error| format!("无法访问系统凭据库：{error}"))?.get_password().or_else(|_| read_provider_api_key(provider)).map_err(|_| format!("尚未保存 OpenAI {slot} API Key"))
 }
 
 pub(crate) fn compact_error(provider: &str, body: &str, status: reqwest::StatusCode) -> String {
@@ -773,7 +793,7 @@ async fn translate_segment(app: AppHandle, request: TranslationRequest) -> Resul
     let base_url = if is_local {
         local_translation_base_url(request.local_endpoint.as_deref().unwrap_or_default())?
     } else {
-        provider_base_url(&request.provider, &request.workspace_id)?
+        if request.provider == "openai" { custom_openai_base_url(request.openai_base_url.as_deref())? } else { provider_base_url(&request.provider, &request.workspace_id)? }
     };
     let _permit = if is_local {
         local_translation_gate().acquire().await
@@ -784,7 +804,7 @@ async fn translate_segment(app: AppHandle, request: TranslationRequest) -> Resul
     let api_key = if is_local {
         None
     } else {
-        Some(read_provider_api_key(&request.provider)?)
+        Some(read_provider_api_key_slot(&request.provider, request.key_slot.as_deref())?)
     };
     let previous = clip_characters(
         request.previous_english.as_deref().unwrap_or_default(),

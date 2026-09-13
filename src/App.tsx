@@ -118,6 +118,7 @@ const defaultSummaryPreferences: SummaryPreferences = {
   translationModel: "gpt-5.4-nano",
   localTranslationModel: LOCAL_TRANSLATION_MODEL,
   localTranslationEndpoint: LOCAL_TRANSLATION_ENDPOINT,
+  openaiBaseUrl: "https://api.openai.com/v1",
   summaryModel: "gpt-5.4-mini",
   lectureSummaryModel: "gpt-5.4-mini",
 };
@@ -1104,6 +1105,10 @@ export function CourseDialog({
                   </button>
                 )}
               </div>
+              <label className="model-select-row" htmlFor="openai-base-url">
+                <span><strong>OpenAI-compatible 地址</strong><small>可填写兼容 OpenAI 接口的服务地址</small></span>
+                <input id="openai-base-url" type="url" value={summaryPreferences.openaiBaseUrl} onChange={(event) => setSummaryPreferences({ ...summaryPreferences, openaiBaseUrl: event.target.value })} />
+              </label>
               </div>
             )}
 
@@ -1706,6 +1711,8 @@ function ChatPanel({
           provider: preferences.textProvider,
           workspaceId: preferences.alibabaWorkspaceId,
           model: preferences.lectureSummaryModel,
+          openaiBaseUrl: preferences.openaiBaseUrl,
+          keySlot: "chat",
           webSearch,
         },
       });
@@ -2667,6 +2674,8 @@ export default function App() {
         workspaceId: summaryPreferences.alibabaWorkspaceId,
         model: summaryModelForKind(summaryPreferences, "lecture"),
         webSearch: summaryPreferences.webSearchEnabled,
+        openaiBaseUrl: summaryPreferences.openaiBaseUrl,
+        keySlot: "lecture-summary",
       },
     });
     const summaries = [...topicSummaries, summary];

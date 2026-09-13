@@ -18,6 +18,10 @@ pub struct ChatRequest {
     pub workspace_id: String,
     pub model: String,
     pub web_search: bool,
+    #[serde(default)]
+    pub openai_base_url: Option<String>,
+    #[serde(default)]
+    pub key_slot: Option<String>,
 }
 
 #[derive(Debug, Clone, Default, Deserialize, Serialize)]
@@ -699,7 +703,7 @@ pub async fn ask_lecture_chat(
         },
         request.question.trim()
     );
-    let base_url = crate::provider_base_url(&request.provider, &request.workspace_id)?;
+    let base_url = if request.provider == "openai" { crate::custom_openai_base_url(request.openai_base_url.as_deref())? } else { crate::provider_base_url(&request.provider, &request.workspace_id)? };
     let endpoint = format!("{base_url}/responses");
     let mut payload = json!({
         "model": request.model,
@@ -716,7 +720,7 @@ pub async fn ask_lecture_chat(
             payload["include"] = json!(["web_search_call.action.sources"]);
         }
     }
-    let api_key = crate::read_provider_api_key(&request.provider)?;
+    let api_key = crate::read_provider_api_key_slot(&request.provider, request.key_slot.as_deref())?;
     let retry_delays = [250, 750, 1_500];
     let mut retry = 0usize;
     let response = loop {

@@ -22,6 +22,10 @@ pub struct SummaryRequest {
     pub workspace_id: String,
     pub model: String,
     pub web_search: bool,
+    #[serde(default)]
+    pub openai_base_url: Option<String>,
+    #[serde(default)]
+    pub key_slot: Option<String>,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -685,7 +689,7 @@ pub async fn generate_topic_summary(request: SummaryRequest) -> Result<TopicSumm
     );
 
     let (provider_label, _, _) = super::provider_details(&request.provider)?;
-    let base_url = super::provider_base_url(&request.provider, &request.workspace_id)?;
+    let base_url = if request.provider == "openai" { super::custom_openai_base_url(request.openai_base_url.as_deref())? } else { super::provider_base_url(&request.provider, &request.workspace_id)? };
     let schema = summary_schema(shape);
     let max_output_tokens = if is_lecture { 18_000 } else { 5_500 };
     let mut payload = if request.provider == "alibaba" {
@@ -734,7 +738,7 @@ pub async fn generate_topic_summary(request: SummaryRequest) -> Result<TopicSumm
         }
     }
 
-    let api_key = super::read_provider_api_key(&request.provider)?;
+    let api_key = super::read_provider_api_key_slot(&request.provider, request.key_slot.as_deref())?;
     let endpoint = format!("{base_url}/responses");
     let mut response_value = post_summary_payload(
         &request.provider,

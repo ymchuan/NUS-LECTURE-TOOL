@@ -88,6 +88,9 @@ export function migrateTextPreferences(
   if (typeof saved.localTranslationEndpoint !== "string" || !saved.localTranslationEndpoint.trim()) {
     next.localTranslationEndpoint = LOCAL_TRANSLATION_ENDPOINT;
   }
+  if (typeof saved.openaiBaseUrl !== "string" || !saved.openaiBaseUrl.trim()) {
+    next.openaiBaseUrl = "https://api.openai.com/v1";
+  }
 
   if (isLegacy && next.textProvider === "alibaba") {
     if (

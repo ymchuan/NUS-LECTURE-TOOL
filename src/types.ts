@@ -99,6 +99,7 @@ export interface SummaryPreferences {
   translationModel: string;
   localTranslationModel: string;
   localTranslationEndpoint: string;
+  openaiBaseUrl?: string;
   summaryModel: string;
   lectureSummaryModel: string;
 }
