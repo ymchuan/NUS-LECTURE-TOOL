@@ -1,0 +1,25 @@
+node_modules
+dist
+src-tauri/target
+.DS_Store
+*.log
+
+# Generated application bundles and local model artifacts
+outputs/*.zip
+outputs/*.app/
+outputs/*.dmg
+outputs/*.exe
+src-tauri/gen/
+work/
+
+# Local credentials and classroom data
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.sqlite
+*.sqlite3
+*.db
+*.db-shm
+*.db-wal

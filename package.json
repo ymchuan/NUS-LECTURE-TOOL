@@ -1,0 +1,47 @@
+{
+  "name": "nus-live-lecture-assistant",
+  "private": true,
+  "version": "0.12.13",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "test": "vitest run",
+    "tauri": "tauri",
+    "tauri:dev": "tauri dev",
+    "tauri:build": "tauri build",
+    "tauri:build:windows": "tauri build --bundles nsis"
+  },
+  "dependencies": {
+    "@mdgate/ppt": "0.6.20",
+    "@tauri-apps/api": "^2.8.0",
+    "@tauri-apps/plugin-opener": "^2.5.4",
+    "katex": "^0.18.4",
+    "lucide-react": "^0.468.0",
+    "pdfjs-dist": "^4.10.38",
+    "pptx-preview": "^1.0.7",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-markdown": "^10.1.0",
+    "rehype-katex": "^7.0.1",
+    "remark-breaks": "^4.0.0",
+    "remark-gfm": "^4.0.1",
+    "remark-math": "^6.0.0"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.8.0",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "@vitejs/plugin-react": "^4.3.4",
+    "jsdom": "^25.0.1",
+    "typescript": "~5.6.3",
+    "vite": "^6.0.5",
+    "vitest": "^4.1.11"
+  },
+  "overrides": {
+    "pptx-preview": {
+      "echarts": "6.1.0",
+      "uuid": "11.1.1"
+    }
+  }
+}

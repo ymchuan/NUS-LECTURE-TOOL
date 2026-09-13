@@ -1,0 +1,3437 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-07T07:56:21.534Z",
+  "elapsedSeconds": 60.094,
+  "environment": {
+    "node": "v20.12.2",
+    "platform": "darwin",
+    "architecture": "arm64"
+  },
+  "config": {
+    "endpoint": "http://127.0.0.1:11434/v1",
+    "model": "qwen3:4b-instruct-2507-q4_K_M",
+    "warmPasses": 5,
+    "mode": "stream",
+    "warmConcurrencies": [
+      1
+    ],
+    "includeUsage": true,
+    "timeoutMs": 120000,
+    "requestMode": "stream chat completions"
+  },
+  "methodology": {
+    "cold": "The first request in this process. It is a true cold-load measurement only if the runtime had unloaded the model before the script started.",
+    "warm": "Each requested concurrency level runs the full sample set after the first request succeeds. Concurrency 2 uses two client workers and includes server queueing in each request's latency.",
+    "ttft": "Time from fetch start to the first non-empty choices[0].delta.content. It is unavailable in non-stream mode.",
+    "outputSpeed": "Approximate output tokens divided by wall time after the first text delta (or full wall time in non-stream mode). Token count uses response usage when available and an explicitly labelled text heuristic otherwise. End-to-end Unicode characters per second is also reported as a tokenizer-independent comparison.",
+    "percentile": "Nearest-rank percentile over successful end-to-end request times.",
+    "preservation": "Deterministic surface checks over accepted Chinese or retained-English aliases. This is a regression signal, not a semantic-quality score."
+  },
+  "workload": {
+    "builtInSamples": 10,
+    "plannedRequests": 51,
+    "attemptedRequests": 51
+  },
+  "reliability": {
+    "successfulRequests": 51,
+    "failedRequests": 0,
+    "successRate": 1
+  },
+  "cold": {
+    "requests": 1,
+    "successfulRequests": 1,
+    "failedRequests": 0,
+    "successRate": 1,
+    "endToEndLatencyMs": {
+      "observations": 1,
+      "minimum": 5431.8,
+      "p50": 5431.8,
+      "p95": 5431.8,
+      "maximum": 5431.8
+    },
+    "timeToFirstTextMs": {
+      "observations": 1,
+      "minimum": 4905,
+      "p50": 4905,
+      "p95": 4905,
+      "maximum": 4905
+    },
+    "estimatedOutputTokensPerSecond": {
+      "observations": 1,
+      "minimum": 26.6,
+      "p50": 26.6,
+      "p95": 26.6,
+      "maximum": 26.6
+    },
+    "endToEndOutputCharactersPerSecond": {
+      "observations": 1,
+      "minimum": 3.3,
+      "p50": 3.3,
+      "p95": 3.3,
+      "maximum": 3.3
+    },
+    "preservation": {
+      "terms": {
+        "passed": 2,
+        "total": 2,
+        "rate": 1
+      },
+      "numbers": {
+        "passed": 1,
+        "total": 1,
+        "rate": 1
+      },
+      "formulas": {
+        "passed": 0,
+        "total": 0,
+        "rate": null
+      },
+      "negation": {
+        "passed": 1,
+        "total": 1,
+        "rate": 1
+      },
+      "outputDiscipline": {
+        "passed": 1,
+        "total": 1,
+        "rate": 1
+      }
+    }
+  },
+  "warmByConcurrency": {
+    "1": {
+      "requests": 50,
+      "successfulRequests": 50,
+      "failedRequests": 0,
+      "successRate": 1,
+      "endToEndLatencyMs": {
+        "observations": 50,
+        "minimum": 621,
+        "p50": 1048,
+        "p95": 1384,
+        "maximum": 1453.2
+      },
+      "timeToFirstTextMs": {
+        "observations": 50,
+        "minimum": 52.2,
+        "p50": 286.4,
+        "p95": 407.7,
+        "maximum": 409.7
+      },
+      "estimatedOutputTokensPerSecond": {
+        "observations": 50,
+        "minimum": 23.9,
+        "p50": 24.8,
+        "p95": 25.4,
+        "maximum": 25.4
+      },
+      "endToEndOutputCharactersPerSecond": {
+        "observations": 50,
+        "minimum": 20.7,
+        "p50": 25,
+        "p95": 29,
+        "maximum": 29.6
+      },
+      "preservation": {
+        "terms": {
+          "passed": 110,
+          "total": 110,
+          "rate": 1
+        },
+        "numbers": {
+          "passed": 45,
+          "total": 45,
+          "rate": 1
+        },
+        "formulas": {
+          "passed": 15,
+          "total": 15,
+          "rate": 1
+        },
+        "negation": {
+          "passed": 45,
+          "total": 45,
+          "rate": 1
+        },
+        "outputDiscipline": {
+          "passed": 50,
+          "total": 50,
+          "rate": 1
+        }
+      }
+    }
+  },
+  "overall": {
+    "endToEndLatencyMs": {
+      "observations": 51,
+      "minimum": 621,
+      "p50": 1048.5,
+      "p95": 1386.1,
+      "maximum": 5431.8
+    },
+    "timeToFirstTextMs": {
+      "observations": 51,
+      "minimum": 52.2,
+      "p50": 286.6,
+      "p95": 408.2,
+      "maximum": 4905
+    },
+    "estimatedOutputTokensPerSecond": {
+      "observations": 51,
+      "minimum": 23.9,
+      "p50": 24.8,
+      "p95": 25.4,
+      "maximum": 26.6
+    },
+    "endToEndOutputCharactersPerSecond": {
+      "observations": 51,
+      "minimum": 3.3,
+      "p50": 25,
+      "p95": 29,
+      "maximum": 29.6
+    }
+  },
+  "preservation": {
+    "terms": {
+      "passed": 112,
+      "total": 112,
+      "rate": 1
+    },
+    "numbers": {
+      "passed": 46,
+      "total": 46,
+      "rate": 1
+    },
+    "formulas": {
+      "passed": 15,
+      "total": 15,
+      "rate": 1
+    },
+    "negation": {
+      "passed": 46,
+      "total": 46,
+      "rate": 1
+    },
+    "outputDiscipline": {
+      "passed": 51,
+      "total": 51,
+      "rate": 1
+    }
+  },
+  "attempts": [
+    {
+      "phase": "cold",
+      "pass": 0,
+      "concurrency": 1,
+      "sampleId": "ml-gradient-negation",
+      "source": "The gradient does not converge when the learning rate exceeds 0.1.",
+      "ok": true,
+      "latencyMs": 5431.8,
+      "ttftMs": 4905,
+      "text": "当学习率超过0.1时，梯度不会收敛。",
+      "usage": {
+        "prompt_tokens": 146,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "completion_tokens": 15,
+        "total_tokens": 161
+      },
+      "observedResponseMode": "SSE",
+      "outputSpeed": {
+        "outputTokens": 15,
+        "outputCharacters": 18,
+        "tokenCountSource": "response usage",
+        "timingBasis": "first text delta to completion",
+        "estimatedTokensPerSecond": 26.58,
+        "endToEndCharactersPerSecond": 3.31
+      },
+      "score": {
+        "evaluatedText": "当学习率超过0.1时，梯度不会收敛。",
+        "termChecks": [
+          {
+            "expectedOneOf": [
+              "梯度"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "学习率"
+            ],
+            "passed": true
+          }
+        ],
+        "numberChecks": [
+          {
+            "expectedOneOf": [
+              "0.1"
+            ],
+            "passed": true
+          }
+        ],
+        "formulaChecks": [],
+        "negation": {
+          "required": true,
+          "passed": true
+        },
+        "outputDisciplinePassed": true
+      }
+    },
+    {
+      "phase": "warm",
+      "pass": 1,
+      "concurrency": 1,
+      "sampleId": "ml-gradient-negation",
+      "source": "The gradient does not converge when the learning rate exceeds 0.1.",
+      "ok": true,
+      "latencyMs": 621,
+      "ttftMs": 52.2,
+      "text": "当学习率超过0.1时，梯度不会收敛。",
+      "usage": {
+        "prompt_tokens": 146,
+        "prompt_tokens_details": {
+          "cached_tokens": 145
+        },
+        "completion_tokens": 15,
+        "total_tokens": 161
+      },
+      "observedResponseMode": "SSE",
+      "outputSpeed": {
+        "outputTokens": 15,
+        "outputCharacters": 18,
+        "tokenCountSource": "response usage",
+        "timingBasis": "first text delta to completion",
+        "estimatedTokensPerSecond": 24.61,
+        "endToEndCharactersPerSecond": 28.99
+      },
+      "score": {
+        "evaluatedText": "当学习率超过0.1时，梯度不会收敛。",
+        "termChecks": [
+          {
+            "expectedOneOf": [
+              "梯度"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "学习率"
+            ],
+            "passed": true
+          }
+        ],
+        "numberChecks": [
+          {
+            "expectedOneOf": [
+              "0.1"
+            ],
+            "passed": true
+          }
+        ],
+        "formulaChecks": [],
+        "negation": {
+          "required": true,
+          "passed": true
+        },
+        "outputDisciplinePassed": true
+      }
+    },
+    {
+      "phase": "warm",
+      "pass": 1,
+      "concurrency": 1,
+      "sampleId": "cellular-handover-threshold",
+      "source": "A handover is not triggered unless RSRP stays below -110 dBm for 3 consecutive measurement periods.",
+      "ok": true,
+      "latencyMs": 1377.6,
+      "ttftMs": 406.6,
+      "text": "除非RSRP在连续3个测量周期内保持低于-110 dBm，否则不会触发切换。",
+      "usage": {
+        "prompt_tokens": 160,
+        "prompt_tokens_details": {
+          "cached_tokens": 86
+        },
+        "completion_tokens": 25,
+        "total_tokens": 185
+      },
+      "observedResponseMode": "SSE",
+      "outputSpeed": {
+        "outputTokens": 25,
+        "outputCharacters": 38,
+        "tokenCountSource": "response usage",
+        "timingBasis": "first text delta to completion",
+        "estimatedTokensPerSecond": 24.72,
+        "endToEndCharactersPerSecond": 27.58
+      },
+      "score": {
+        "evaluatedText": "除非RSRP在连续3个测量周期内保持低于-110 dBm，否则不会触发切换。",
+        "termChecks": [
+          {
+            "expectedOneOf": [
+              "切换"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "RSRP"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "dBm"
+            ],
+            "passed": true
+          }
+        ],
+        "numberChecks": [
+          {
+            "expectedOneOf": [
+              "-110",
+              "−110"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "3",
+              "三"
+            ],
+            "passed": true
+          }
+        ],
+        "formulaChecks": [],
+        "negation": {
+          "required": true,
+          "passed": true
+        },
+        "outputDisciplinePassed": true
+      }
+    },
+    {
+      "phase": "warm",
+      "pass": 1,
+      "concurrency": 1,
+      "sampleId": "queueing-littles-law",
+      "source": "Little's Law says L = λW, but it does not assume Poisson arrivals.",
+      "ok": true,
+      "latencyMs": 964.5,
+      "ttftMs": 284.2,
+      "text": "利特尔定律指出 L = λW，但它并不假设泊松到达。",
+      "usage": {
+        "prompt_tokens": 152,
+        "prompt_tokens_details": {
+          "cached_tokens": 97
+        },
+        "completion_tokens": 18,
+        "total_tokens": 170
+      },
+      "observedResponseMode": "SSE",
+      "outputSpeed": {
+        "outputTokens": 18,
+        "outputCharacters": 26,
+        "tokenCountSource": "response usage",
+        "timingBasis": "first text delta to completion",
+        "estimatedTokensPerSecond": 24.99,
+        "endToEndCharactersPerSecond": 26.96
+      },
+      "score": {
+        "evaluatedText": "利特尔定律指出 L = λW，但它并不假设泊松到达。",
+        "termChecks": [
+          {
+            "expectedOneOf": [
+              "利特尔定律"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "泊松"
+            ],
+            "passed": true
+          }
+        ],
+        "numberChecks": [],
+        "formulaChecks": [
+          {
+            "expectedOneOf": [
+              "L=λW",
+              "L=lambdaW"
+            ],
+            "passed": true
+          }
+        ],
+        "negation": {
+          "required": true,
+          "passed": true
+        },
+        "outputDisciplinePassed": true
+      }
+    },
+    {
+      "phase": "warm",
+      "pass": 1,
+      "concurrency": 1,
+      "sampleId": "economics-elasticity",
+      "source": "A price elasticity of -1.5 does not mean demand rises when price rises by 10%.",
+      "ok": true,
+      "latencyMs": 1059.9,
+      "ttftMs": 291,
+      "text": "价格弹性为-1.5并不意味着价格上升10%时需求会增加。",
+      "usage": {
+        "prompt_tokens": 144,
+        "prompt_tokens_details": {
+          "cached_tokens": 83
+        },
+        "completion_tokens": 20,
+        "total_tokens": 164
+      },
+      "observedResponseMode": "SSE",
+      "outputSpeed": {
+        "outputTokens": 20,
+        "outputCharacters": 28,
+        "tokenCountSource": "response usage",
+        "timingBasis": "first text delta to completion",
+        "estimatedTokensPerSecond": 24.71,
+        "endToEndCharactersPerSecond": 26.42
+      },
+      "score": {
+        "evaluatedText": "价格弹性为-1.5并不意味着价格上升10%时需求会增加。",
+        "termChecks": [
+          {
+            "expectedOneOf": [
+              "价格弹性"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "需求"
+            ],
+            "passed": true
+          }
+        ],
+        "numberChecks": [
+          {
+            "expectedOneOf": [
+              "-1.5",
+              "−1.5"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "10%",
+              "10％"
+            ],
+            "passed": true
+          }
+        ],
+        "formulaChecks": [],
+        "negation": {
+          "required": true,
+          "passed": true
+        },
+        "outputDisciplinePassed": true
+      }
+    },
+    {
+      "phase": "warm",
+      "pass": 1,
+      "concurrency": 1,
+      "sampleId": "classification-error-rates",
+      "source": "The false-positive rate fell from 2.4% to 0.8%; we cannot ignore false negatives.",
+      "ok": true,
+      "latencyMs": 1250.3,
+      "ttftMs": 404.4,
+      "text": "假阳性率从2.4%降至0.8%；我们不能忽视假阴性。",
+      "usage": {
+        "prompt_tokens": 156,
+        "prompt_tokens_details": {
+          "cached_tokens": 83
+        },
+        "completion_tokens": 22,
+        "total_tokens": 178
+      },
+      "observedResponseMode": "SSE",
+      "outputSpeed": {
+        "outputTokens": 22,
+        "outputCharacters": 26,
+        "tokenCountSource": "response usage",
+        "timingBasis": "first text delta to completion",
+        "estimatedTokensPerSecond": 24.83,
+        "endToEndCharactersPerSecond": 20.79
+      },
+      "score": {
+        "evaluatedText": "假阳性率从2.4%降至0.8%；我们不能忽视假阴性。",
+        "termChecks": [
+          {
+            "expectedOneOf": [
+              "假阳性",
+              "误报"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "假阴性",
+              "漏报"
+            ],
+            "passed": true
+          }
+        ],
+        "numberChecks": [
+          {
+            "expectedOneOf": [
+              "2.4%",
+              "2.4％"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "0.8%",
+              "0.8％"
+            ],
+            "passed": true
+          }
+        ],
+        "formulaChecks": [],
+        "negation": {
+          "required": true,
+          "passed": true
+        },
+        "outputDisciplinePassed": true
+      }
+    },
+    {
+      "phase": "warm",
+      "pass": 1,
+      "concurrency": 1,
+      "sampleId": "network-jitter-buffer",
+      "source": "With a 20 ms jitter buffer, packets that arrive out of order must not be silently discarded.",
+      "ok": true,
+      "latencyMs": 1252.4,
+      "ttftMs": 286.4,
+      "text": "具有20毫秒的抖动缓冲区时，乱序到达的数据包不得被静默丢弃。",
+      "usage": {
+        "prompt_tokens": 144,
+        "prompt_tokens_details": {
+          "cached_tokens": 83
+        },
+        "completion_tokens": 25,
+        "total_tokens": 169
+      },
+      "observedResponseMode": "SSE",
+      "outputSpeed": {
+        "outputTokens": 25,
+        "outputCharacters": 30,
+        "tokenCountSource": "response usage",
+        "timingBasis": "first text delta to completion",
+        "estimatedTokensPerSecond": 24.85,
+        "endToEndCharactersPerSecond": 23.95
+      },
+      "score": {
+        "evaluatedText": "具有20毫秒的抖动缓冲区时，乱序到达的数据包不得被静默丢弃。",
+        "termChecks": [
+          {
+            "expectedOneOf": [
+              "抖动缓冲"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "数据包",
+              "分组"
+            ],
+            "passed": true
+          }
+        ],
+        "numberChecks": [
+          {
+            "expectedOneOf": [
+              "20 ms",
+              "20ms",
+              "20 毫秒",
+              "20毫秒"
+            ],
+            "passed": true
+          }
+        ],
+        "formulaChecks": [],
+        "negation": {
+          "required": true,
+          "passed": true
+        },
+        "outputDisciplinePassed": true
+      }
+    },
+    {
+      "phase": "warm",
+      "pass": 1,
+      "concurrency": 1,
+      "sampleId": "bayes-formula",
+      "source": "The posterior is proportional to likelihood times prior: p(θ|x) ∝ p(x|θ)p(θ).",
+      "ok": true,
+      "latencyMs": 1453.2,
+      "ttftMs": 287.8,
+      "text": "后验与似然乘以先验成正比：p(θ|x) ∝ p(x|θ)p(θ)。",
+      "usage": {
+        "prompt_tokens": 159,
+        "prompt_tokens_details": {
+          "cached_tokens": 99
+        },
+        "completion_tokens": 30,
+        "total_tokens": 189
+      },
+      "observedResponseMode": "SSE",
+      "outputSpeed": {
+        "outputTokens": 30,
+        "outputCharacters": 33,
+        "tokenCountSource": "response usage",
+        "timingBasis": "first text delta to completion",
+        "estimatedTokensPerSecond": 24.89,
+        "endToEndCharactersPerSecond": 22.71
+      },
+      "score": {
+        "evaluatedText": "后验与似然乘以先验成正比：p(θ|x) ∝ p(x|θ)p(θ)。",
+        "termChecks": [
+          {
+            "expectedOneOf": [
+              "后验"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "似然"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "先验"
+            ],
+            "passed": true
+          }
+        ],
+        "numberChecks": [],
+        "formulaChecks": [
+          {
+            "expectedOneOf": [
+              "p(θ|x)∝p(x|θ)p(θ)"
+            ],
+            "passed": true
+          }
+        ],
+        "negation": {
+          "required": false,
+          "passed": true
+        },
+        "outputDisciplinePassed": true
+      }
+    },
+    {
+      "phase": "warm",
+      "pass": 1,
+      "concurrency": 1,
+      "sampleId": "statistics-spoken-negation",
+      "source": "So, uh, the confidence interval is 95%, which doesn't prove the null hypothesis is true.",
+      "ok": true,
+      "latencyMs": 963.3,
+      "ttftMs": 287.8,
+      "text": "所以，置信区间是95%，这并不能证明原假设为真。",
+      "usage": {
+        "prompt_tokens": 147,
+        "prompt_tokens_details": {
+          "cached_tokens": 83
+        },
+        "completion_tokens": 18,
+        "total_tokens": 165
+      },
+      "observedResponseMode": "SSE",
+      "outputSpeed": {
+        "outputTokens": 18,
+        "outputCharacters": 24,
+        "tokenCountSource": "response usage",
+        "timingBasis": "first text delta to completion",
+        "estimatedTokensPerSecond": 25.17,
+        "endToEndCharactersPerSecond": 24.92
+      },
+      "score": {
+        "evaluatedText": "所以，置信区间是95%，这并不能证明原假设为真。",
+        "termChecks": [
+          {
+            "expectedOneOf": [
+              "置信区间"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "原假设",
+              "零假设"
+            ],
+            "passed": true
+          }
+        ],
+        "numberChecks": [
+          {
+            "expectedOneOf": [
+              "95%",
+              "95％"
+            ],
+            "passed": true
+          }
+        ],
+        "formulaChecks": [],
+        "negation": {
+          "required": true,
+          "passed": true
+        },
+        "outputDisciplinePassed": true
+      }
+    },
+    {
+      "phase": "warm",
+      "pass": 1,
+      "concurrency": 1,
+      "sampleId": "cellular-authentication-order",
+      "source": "The UE may camp on LTE, but it must not attach to the network before authentication completes.",
+      "ok": true,
+      "latencyMs": 1258.5,
+      "ttftMs": 402.7,
+      "text": "UE 可以驻留在 LTE 网络中，但在认证完成前不得接入网络。",
+      "usage": {
+        "prompt_tokens": 151,
+        "prompt_tokens_details": {
+          "cached_tokens": 83
+        },
+        "completion_tokens": 22,
+        "total_tokens": 173
+      },
+      "observedResponseMode": "SSE",
+      "outputSpeed": {
+        "outputTokens": 22,
+        "outputCharacters": 31,
+        "tokenCountSource": "response usage",
+        "timingBasis": "first text delta to completion",
+        "estimatedTokensPerSecond": 24.54,
+        "endToEndCharactersPerSecond": 24.63
+      },
+      "score": {
+        "evaluatedText": "UE 可以驻留在 LTE 网络中，但在认证完成前不得接入网络。",
+        "termChecks": [
+          {
+            "expectedOneOf": [
+              "UE"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "LTE"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "认证"
+            ],
+            "passed": true
+          }
+        ],
+        "numberChecks": [],
+        "formulaChecks": [],
+        "negation": {
+          "required": true,
+          "passed": true
+        },
+        "outputDisciplinePassed": true
+      }
+    },
+    {
+      "phase": "warm",
+      "pass": 1,
+      "concurrency": 1,
+      "sampleId": "numerical-rounding-boundary",
+      "source": "If x ≤ 10^-3, do not round it to zero.",
+      "ok": true,
+      "latencyMs": 919,
+      "ttftMs": 283.4,
+      "text": "如果 x ≤ 10^-3，不要将其舍入为零。",
+      "usage": {
+        "prompt_tokens": 136,
+        "prompt_tokens_details": {
+          "cached_tokens": 83
+        },
+        "completion_tokens": 17,
+        "total_tokens": 153
+      },
+      "observedResponseMode": "SSE",
+      "outputSpeed": {
+        "outputTokens": 17,
+        "outputCharacters": 22,
+        "tokenCountSource": "response usage",
+        "timingBasis": "first text delta to completion",
+        "estimatedTokensPerSecond": 25.17,
+        "endToEndCharactersPerSecond": 23.94
+      },
+      "score": {
+        "evaluatedText": "如果 x ≤ 10^-3，不要将其舍入为零。",
+        "termChecks": [
+          {
+            "expectedOneOf": [
+              "舍入",
+              "取整"
+            ],
+            "passed": true
+          }
+        ],
+        "numberChecks": [],
+        "formulaChecks": [
+          {
+            "expectedOneOf": [
+              "x≤10^-3",
+              "x≤10⁻³",
+              "x<=10^-3"
+            ],
+            "passed": true
+          }
+        ],
+        "negation": {
+          "required": true,
+          "passed": true
+        },
+        "outputDisciplinePassed": true
+      }
+    },
+    {
+      "phase": "warm",
+      "pass": 2,
+      "concurrency": 1,
+      "sampleId": "ml-gradient-negation",
+      "source": "The gradient does not converge when the learning rate exceeds 0.1.",
+      "ok": true,
+      "latencyMs": 842,
+      "ttftMs": 285.4,
+      "text": "当学习率超过0.1时，梯度不会收敛。",
+      "usage": {
+        "prompt_tokens": 146,
+        "prompt_tokens_details": {
+          "cached_tokens": 83
+        },
+        "completion_tokens": 15,
+        "total_tokens": 161
+      },
+      "observedResponseMode": "SSE",
+      "outputSpeed": {
+        "outputTokens": 15,
+        "outputCharacters": 18,
+        "tokenCountSource": "response usage",
+        "timingBasis": "first text delta to completion",
+        "estimatedTokensPerSecond": 25.15,
+        "endToEndCharactersPerSecond": 21.38
+      },
+      "score": {
+        "evaluatedText": "当学习率超过0.1时，梯度不会收敛。",
+        "termChecks": [
+          {
+            "expectedOneOf": [
+              "梯度"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "学习率"
+            ],
+            "passed": true
+          }
+        ],
+        "numberChecks": [
+          {
+            "expectedOneOf": [
+              "0.1"
+            ],
+            "passed": true
+          }
+        ],
+        "formulaChecks": [],
+        "negation": {
+          "required": true,
+          "passed": true
+        },
+        "outputDisciplinePassed": true
+      }
+    },
+    {
+      "phase": "warm",
+      "pass": 2,
+      "concurrency": 1,
+      "sampleId": "cellular-handover-threshold",
+      "source": "A handover is not triggered unless RSRP stays below -110 dBm for 3 consecutive measurement periods.",
+      "ok": true,
+      "latencyMs": 1373.1,
+      "ttftMs": 406.1,
+      "text": "除非RSRP在连续3个测量周期内保持低于-110 dBm，否则不会触发切换。",
+      "usage": {
+        "prompt_tokens": 160,
+        "prompt_tokens_details": {
+          "cached_tokens": 86
+        },
+        "completion_tokens": 25,
+        "total_tokens": 185
+      },
+      "observedResponseMode": "SSE",
+      "outputSpeed": {
+        "outputTokens": 25,
+        "outputCharacters": 38,
+        "tokenCountSource": "response usage",
+        "timingBasis": "first text delta to completion",
+        "estimatedTokensPerSecond": 24.82,
+        "endToEndCharactersPerSecond": 27.68
+      },
+      "score": {
+        "evaluatedText": "除非RSRP在连续3个测量周期内保持低于-110 dBm，否则不会触发切换。",
+        "termChecks": [
+          {
+            "expectedOneOf": [
+              "切换"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "RSRP"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "dBm"
+            ],
+            "passed": true
+          }
+        ],
+        "numberChecks": [
+          {
+            "expectedOneOf": [
+              "-110",
+              "−110"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "3",
+              "三"
+            ],
+            "passed": true
+          }
+        ],
+        "formulaChecks": [],
+        "negation": {
+          "required": true,
+          "passed": true
+        },
+        "outputDisciplinePassed": true
+      }
+    },
+    {
+      "phase": "warm",
+      "pass": 2,
+      "concurrency": 1,
+      "sampleId": "queueing-littles-law",
+      "source": "Little's Law says L = λW, but it does not assume Poisson arrivals.",
+      "ok": true,
+      "latencyMs": 994.7,
+      "ttftMs": 283.1,
+      "text": "利特尔定律指出 L = λW，但它并不假设泊松到达。",
+      "usage": {
+        "prompt_tokens": 152,
+        "prompt_tokens_details": {
+          "cached_tokens": 97
+        },
+        "completion_tokens": 18,
+        "total_tokens": 170
+      },
+      "observedResponseMode": "SSE",
+      "outputSpeed": {
+        "outputTokens": 18,
+        "outputCharacters": 26,
+        "tokenCountSource": "response usage",
+        "timingBasis": "first text delta to completion",
+        "estimatedTokensPerSecond": 23.89,
+        "endToEndCharactersPerSecond": 26.14
+      },
+      "score": {
+        "evaluatedText": "利特尔定律指出 L = λW，但它并不假设泊松到达。",
+        "termChecks": [
+          {
+            "expectedOneOf": [
+              "利特尔定律"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "泊松"
+            ],
+            "passed": true
+          }
+        ],
+        "numberChecks": [],
+        "formulaChecks": [
+          {
+            "expectedOneOf": [
+              "L=λW",
+              "L=lambdaW"
+            ],
+            "passed": true
+          }
+        ],
+        "negation": {
+          "required": true,
+          "passed": true
+        },
+        "outputDisciplinePassed": true
+      }
+    },
+    {
+      "phase": "warm",
+      "pass": 2,
+      "concurrency": 1,
+      "sampleId": "economics-elasticity",
+      "source": "A price elasticity of -1.5 does not mean demand rises when price rises by 10%.",
+      "ok": true,
+      "latencyMs": 1054.7,
+      "ttftMs": 291,
+      "text": "价格弹性为-1.5并不意味着价格上升10%时需求会增加。",
+      "usage": {
+        "prompt_tokens": 144,
+        "prompt_tokens_details": {
+          "cached_tokens": 83
+        },
+        "completion_tokens": 20,
+        "total_tokens": 164
+      },
+      "observedResponseMode": "SSE",
+      "outputSpeed": {
+        "outputTokens": 20,
+        "outputCharacters": 28,
+        "tokenCountSource": "response usage",
+        "timingBasis": "first text delta to completion",
+        "estimatedTokensPerSecond": 24.88,
+        "endToEndCharactersPerSecond": 26.55
+      },
+      "score": {
+        "evaluatedText": "价格弹性为-1.5并不意味着价格上升10%时需求会增加。",
+        "termChecks": [
+          {
+            "expectedOneOf": [
+              "价格弹性"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "需求"
+            ],
+            "passed": true
+          }
+        ],
+        "numberChecks": [
+          {
+            "expectedOneOf": [
+              "-1.5",
+              "−1.5"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "10%",
+              "10％"
+            ],
+            "passed": true
+          }
+        ],
+        "formulaChecks": [],
+        "negation": {
+          "required": true,
+          "passed": true
+        },
+        "outputDisciplinePassed": true
+      }
+    },
+    {
+      "phase": "warm",
+      "pass": 2,
+      "concurrency": 1,
+      "sampleId": "classification-error-rates",
+      "source": "The false-positive rate fell from 2.4% to 0.8%; we cannot ignore false negatives.",
+      "ok": true,
+      "latencyMs": 1243.3,
+      "ttftMs": 403.9,
+      "text": "假阳性率从2.4%降至0.8%；我们不能忽视假阴性。",
+      "usage": {
+        "prompt_tokens": 156,
+        "prompt_tokens_details": {
+          "cached_tokens": 83
+        },
+        "completion_tokens": 22,
+        "total_tokens": 178
+      },
+      "observedResponseMode": "SSE",
+      "outputSpeed": {
+        "outputTokens": 22,
+        "outputCharacters": 26,
+        "tokenCountSource": "response usage",
+        "timingBasis": "first text delta to completion",
+        "estimatedTokensPerSecond": 25.02,
+        "endToEndCharactersPerSecond": 20.91
+      },
+      "score": {
+        "evaluatedText": "假阳性率从2.4%降至0.8%；我们不能忽视假阴性。",
+        "termChecks": [
+          {
+            "expectedOneOf": [
+              "假阳性",
+              "误报"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "假阴性",
+              "漏报"
+            ],
+            "passed": true
+          }
+        ],
+        "numberChecks": [
+          {
+            "expectedOneOf": [
+              "2.4%",
+              "2.4％"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "0.8%",
+              "0.8％"
+            ],
+            "passed": true
+          }
+        ],
+        "formulaChecks": [],
+        "negation": {
+          "required": true,
+          "passed": true
+        },
+        "outputDisciplinePassed": true
+      }
+    },
+    {
+      "phase": "warm",
+      "pass": 2,
+      "concurrency": 1,
+      "sampleId": "network-jitter-buffer",
+      "source": "With a 20 ms jitter buffer, packets that arrive out of order must not be silently discarded.",
+      "ok": true,
+      "latencyMs": 980.4,
+      "ttftMs": 59.5,
+      "text": "具有20毫秒抖动缓冲区时，乱序到达的数据包不得被静默丢弃。",
+      "usage": {
+        "prompt_tokens": 144,
+        "prompt_tokens_details": {
+          "cached_tokens": 143
+        },
+        "completion_tokens": 24,
+        "total_tokens": 168
+      },
+      "observedResponseMode": "SSE",
+      "outputSpeed": {
+        "outputTokens": 24,
+        "outputCharacters": 29,
+        "tokenCountSource": "response usage",
+        "timingBasis": "first text delta to completion",
+        "estimatedTokensPerSecond": 24.98,
+        "endToEndCharactersPerSecond": 29.58
+      },
+      "score": {
+        "evaluatedText": "具有20毫秒抖动缓冲区时，乱序到达的数据包不得被静默丢弃。",
+        "termChecks": [
+          {
+            "expectedOneOf": [
+              "抖动缓冲"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "数据包",
+              "分组"
+            ],
+            "passed": true
+          }
+        ],
+        "numberChecks": [
+          {
+            "expectedOneOf": [
+              "20 ms",
+              "20ms",
+              "20 毫秒",
+              "20毫秒"
+            ],
+            "passed": true
+          }
+        ],
+        "formulaChecks": [],
+        "negation": {
+          "required": true,
+          "passed": true
+        },
+        "outputDisciplinePassed": true
+      }
+    },
+    {
+      "phase": "warm",
+      "pass": 2,
+      "concurrency": 1,
+      "sampleId": "bayes-formula",
+      "source": "The posterior is proportional to likelihood times prior: p(θ|x) ∝ p(x|θ)p(θ).",
+      "ok": true,
+      "latencyMs": 1246.4,
+      "ttftMs": 61.2,
+      "text": "后验与似然乘以先验成正比：p(θ|x) ∝ p(x|θ)p(θ)。",
+      "usage": {
+        "prompt_tokens": 159,
+        "prompt_tokens_details": {
+          "cached_tokens": 158
+        },
+        "completion_tokens": 30,
+        "total_tokens": 189
+      },
+      "observedResponseMode": "SSE",
+      "outputSpeed": {
+        "outputTokens": 30,
+        "outputCharacters": 33,
+        "tokenCountSource": "response usage",
+        "timingBasis": "first text delta to completion",
+        "estimatedTokensPerSecond": 24.47,
+        "endToEndCharactersPerSecond": 26.48
+      },
+      "score": {
+        "evaluatedText": "后验与似然乘以先验成正比：p(θ|x) ∝ p(x|θ)p(θ)。",
+        "termChecks": [
+          {
+            "expectedOneOf": [
+              "后验"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "似然"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "先验"
+            ],
+            "passed": true
+          }
+        ],
+        "numberChecks": [],
+        "formulaChecks": [
+          {
+            "expectedOneOf": [
+              "p(θ|x)∝p(x|θ)p(θ)"
+            ],
+            "passed": true
+          }
+        ],
+        "negation": {
+          "required": false,
+          "passed": true
+        },
+        "outputDisciplinePassed": true
+      }
+    },
+    {
+      "phase": "warm",
+      "pass": 2,
+      "concurrency": 1,
+      "sampleId": "statistics-spoken-negation",
+      "source": "So, uh, the confidence interval is 95%, which doesn't prove the null hypothesis is true.",
+      "ok": true,
+      "latencyMs": 959.1,
+      "ttftMs": 284,
+      "text": "所以，置信区间是95%，这并不能证明原假设为真。",
+      "usage": {
+        "prompt_tokens": 147,
+        "prompt_tokens_details": {
+          "cached_tokens": 83
+        },
+        "completion_tokens": 18,
+        "total_tokens": 165
+      },
+      "observedResponseMode": "SSE",
+      "outputSpeed": {
+        "outputTokens": 18,
+        "outputCharacters": 24,
+        "tokenCountSource": "response usage",
+        "timingBasis": "first text delta to completion",
+        "estimatedTokensPerSecond": 25.18,
+        "endToEndCharactersPerSecond": 25.02
+      },
+      "score": {
+        "evaluatedText": "所以，置信区间是95%，这并不能证明原假设为真。",
+        "termChecks": [
+          {
+            "expectedOneOf": [
+              "置信区间"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "原假设",
+              "零假设"
+            ],
+            "passed": true
+          }
+        ],
+        "numberChecks": [
+          {
+            "expectedOneOf": [
+              "95%",
+              "95％"
+            ],
+            "passed": true
+          }
+        ],
+        "formulaChecks": [],
+        "negation": {
+          "required": true,
+          "passed": true
+        },
+        "outputDisciplinePassed": true
+      }
+    },
+    {
+      "phase": "warm",
+      "pass": 2,
+      "concurrency": 1,
+      "sampleId": "cellular-authentication-order",
+      "source": "The UE may camp on LTE, but it must not attach to the network before authentication completes.",
+      "ok": true,
+      "latencyMs": 1233.5,
+      "ttftMs": 401.4,
+      "text": "UE 可以驻留在 LTE 网络中，但在认证完成前不得接入网络。",
+      "usage": {
+        "prompt_tokens": 151,
+        "prompt_tokens_details": {
+          "cached_tokens": 83
+        },
+        "completion_tokens": 22,
+        "total_tokens": 173
+      },
+      "observedResponseMode": "SSE",
+      "outputSpeed": {
+        "outputTokens": 22,
+        "outputCharacters": 31,
+        "tokenCountSource": "response usage",
+        "timingBasis": "first text delta to completion",
+        "estimatedTokensPerSecond": 25.24,
+        "endToEndCharactersPerSecond": 25.13
+      },
+      "score": {
+        "evaluatedText": "UE 可以驻留在 LTE 网络中，但在认证完成前不得接入网络。",
+        "termChecks": [
+          {
+            "expectedOneOf": [
+              "UE"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "LTE"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "认证"
+            ],
+            "passed": true
+          }
+        ],
+        "numberChecks": [],
+        "formulaChecks": [],
+        "negation": {
+          "required": true,
+          "passed": true
+        },
+        "outputDisciplinePassed": true
+      }
+    },
+    {
+      "phase": "warm",
+      "pass": 2,
+      "concurrency": 1,
+      "sampleId": "numerical-rounding-boundary",
+      "source": "If x ≤ 10^-3, do not round it to zero.",
+      "ok": true,
+      "latencyMs": 912.7,
+      "ttftMs": 282.4,
+      "text": "如果 x ≤ 10^-3，不要将其舍入为零。",
+      "usage": {
+        "prompt_tokens": 136,
+        "prompt_tokens_details": {
+          "cached_tokens": 83
+        },
+        "completion_tokens": 17,
+        "total_tokens": 153
+      },
+      "observedResponseMode": "SSE",
+      "outputSpeed": {
+        "outputTokens": 17,
+        "outputCharacters": 22,
+        "tokenCountSource": "response usage",
+        "timingBasis": "first text delta to completion",
+        "estimatedTokensPerSecond": 25.38,
+        "endToEndCharactersPerSecond": 24.1
+      },
+      "score": {
+        "evaluatedText": "如果 x ≤ 10^-3，不要将其舍入为零。",
+        "termChecks": [
+          {
+            "expectedOneOf": [
+              "舍入",
+              "取整"
+            ],
+            "passed": true
+          }
+        ],
+        "numberChecks": [],
+        "formulaChecks": [
+          {
+            "expectedOneOf": [
+              "x≤10^-3",
+              "x≤10⁻³",
+              "x<=10^-3"
+            ],
+            "passed": true
+          }
+        ],
+        "negation": {
+          "required": true,
+          "passed": true
+        },
+        "outputDisciplinePassed": true
+      }
+    },
+    {
+      "phase": "warm",
+      "pass": 3,
+      "concurrency": 1,
+      "sampleId": "ml-gradient-negation",
+      "source": "The gradient does not converge when the learning rate exceeds 0.1.",
+      "ok": true,
+      "latencyMs": 835.6,
+      "ttftMs": 284.9,
+      "text": "当学习率超过0.1时，梯度不会收敛。",
+      "usage": {
+        "prompt_tokens": 146,
+        "prompt_tokens_details": {
+          "cached_tokens": 83
+        },
+        "completion_tokens": 15,
+        "total_tokens": 161
+      },
+      "observedResponseMode": "SSE",
+      "outputSpeed": {
+        "outputTokens": 15,
+        "outputCharacters": 18,
+        "tokenCountSource": "response usage",
+        "timingBasis": "first text delta to completion",
+        "estimatedTokensPerSecond": 25.42,
+        "endToEndCharactersPerSecond": 21.54
+      },
+      "score": {
+        "evaluatedText": "当学习率超过0.1时，梯度不会收敛。",
+        "termChecks": [
+          {
+            "expectedOneOf": [
+              "梯度"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "学习率"
+            ],
+            "passed": true
+          }
+        ],
+        "numberChecks": [
+          {
+            "expectedOneOf": [
+              "0.1"
+            ],
+            "passed": true
+          }
+        ],
+        "formulaChecks": [],
+        "negation": {
+          "required": true,
+          "passed": true
+        },
+        "outputDisciplinePassed": true
+      }
+    },
+    {
+      "phase": "warm",
+      "pass": 3,
+      "concurrency": 1,
+      "sampleId": "cellular-handover-threshold",
+      "source": "A handover is not triggered unless RSRP stays below -110 dBm for 3 consecutive measurement periods.",
+      "ok": true,
+      "latencyMs": 1375.3,
+      "ttftMs": 404.5,
+      "text": "除非RSRP在连续3个测量周期内保持低于-110 dBm，否则不会触发切换。",
+      "usage": {
+        "prompt_tokens": 160,
+        "prompt_tokens_details": {
+          "cached_tokens": 86
+        },
+        "completion_tokens": 25,
+        "total_tokens": 185
+      },
+      "observedResponseMode": "SSE",
+      "outputSpeed": {
+        "outputTokens": 25,
+        "outputCharacters": 38,
+        "tokenCountSource": "response usage",
+        "timingBasis": "first text delta to completion",
+        "estimatedTokensPerSecond": 24.72,
+        "endToEndCharactersPerSecond": 27.63
+      },
+      "score": {
+        "evaluatedText": "除非RSRP在连续3个测量周期内保持低于-110 dBm，否则不会触发切换。",
+        "termChecks": [
+          {
+            "expectedOneOf": [
+              "切换"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "RSRP"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "dBm"
+            ],
+            "passed": true
+          }
+        ],
+        "numberChecks": [
+          {
+            "expectedOneOf": [
+              "-110",
+              "−110"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "3",
+              "三"
+            ],
+            "passed": true
+          }
+        ],
+        "formulaChecks": [],
+        "negation": {
+          "required": true,
+          "passed": true
+        },
+        "outputDisciplinePassed": true
+      }
+    },
+    {
+      "phase": "warm",
+      "pass": 3,
+      "concurrency": 1,
+      "sampleId": "queueing-littles-law",
+      "source": "Little's Law says L = λW, but it does not assume Poisson arrivals.",
+      "ok": true,
+      "latencyMs": 966.1,
+      "ttftMs": 284.3,
+      "text": "利特尔定律指出 L = λW，但它并不假设泊松到达。",
+      "usage": {
+        "prompt_tokens": 152,
+        "prompt_tokens_details": {
+          "cached_tokens": 97
+        },
+        "completion_tokens": 18,
+        "total_tokens": 170
+      },
+      "observedResponseMode": "SSE",
+      "outputSpeed": {
+        "outputTokens": 18,
+        "outputCharacters": 26,
+        "tokenCountSource": "response usage",
+        "timingBasis": "first text delta to completion",
+        "estimatedTokensPerSecond": 24.94,
+        "endToEndCharactersPerSecond": 26.91
+      },
+      "score": {
+        "evaluatedText": "利特尔定律指出 L = λW，但它并不假设泊松到达。",
+        "termChecks": [
+          {
+            "expectedOneOf": [
+              "利特尔定律"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "泊松"
+            ],
+            "passed": true
+          }
+        ],
+        "numberChecks": [],
+        "formulaChecks": [
+          {
+            "expectedOneOf": [
+              "L=λW",
+              "L=lambdaW"
+            ],
+            "passed": true
+          }
+        ],
+        "negation": {
+          "required": true,
+          "passed": true
+        },
+        "outputDisciplinePassed": true
+      }
+    },
+    {
+      "phase": "warm",
+      "pass": 3,
+      "concurrency": 1,
+      "sampleId": "economics-elasticity",
+      "source": "A price elasticity of -1.5 does not mean demand rises when price rises by 10%.",
+      "ok": true,
+      "latencyMs": 1048,
+      "ttftMs": 285,
+      "text": "价格弹性为-1.5并不意味着价格上升10%时需求会增加。",
+      "usage": {
+        "prompt_tokens": 144,
+        "prompt_tokens_details": {
+          "cached_tokens": 83
+        },
+        "completion_tokens": 20,
+        "total_tokens": 164
+      },
+      "observedResponseMode": "SSE",
+      "outputSpeed": {
+        "outputTokens": 20,
+        "outputCharacters": 28,
+        "tokenCountSource": "response usage",
+        "timingBasis": "first text delta to completion",
+        "estimatedTokensPerSecond": 24.9,
+        "endToEndCharactersPerSecond": 26.72
+      },
+      "score": {
+        "evaluatedText": "价格弹性为-1.5并不意味着价格上升10%时需求会增加。",
+        "termChecks": [
+          {
+            "expectedOneOf": [
+              "价格弹性"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "需求"
+            ],
+            "passed": true
+          }
+        ],
+        "numberChecks": [
+          {
+            "expectedOneOf": [
+              "-1.5",
+              "−1.5"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "10%",
+              "10％"
+            ],
+            "passed": true
+          }
+        ],
+        "formulaChecks": [],
+        "negation": {
+          "required": true,
+          "passed": true
+        },
+        "outputDisciplinePassed": true
+      }
+    },
+    {
+      "phase": "warm",
+      "pass": 3,
+      "concurrency": 1,
+      "sampleId": "classification-error-rates",
+      "source": "The false-positive rate fell from 2.4% to 0.8%; we cannot ignore false negatives.",
+      "ok": true,
+      "latencyMs": 1255,
+      "ttftMs": 401.1,
+      "text": "假阳性率从2.4%降至0.8%；我们不能忽视假阴性。",
+      "usage": {
+        "prompt_tokens": 156,
+        "prompt_tokens_details": {
+          "cached_tokens": 83
+        },
+        "completion_tokens": 22,
+        "total_tokens": 178
+      },
+      "observedResponseMode": "SSE",
+      "outputSpeed": {
+        "outputTokens": 22,
+        "outputCharacters": 26,
+        "tokenCountSource": "response usage",
+        "timingBasis": "first text delta to completion",
+        "estimatedTokensPerSecond": 24.59,
+        "endToEndCharactersPerSecond": 20.72
+      },
+      "score": {
+        "evaluatedText": "假阳性率从2.4%降至0.8%；我们不能忽视假阴性。",
+        "termChecks": [
+          {
+            "expectedOneOf": [
+              "假阳性",
+              "误报"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "假阴性",
+              "漏报"
+            ],
+            "passed": true
+          }
+        ],
+        "numberChecks": [
+          {
+            "expectedOneOf": [
+              "2.4%",
+              "2.4％"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "0.8%",
+              "0.8％"
+            ],
+            "passed": true
+          }
+        ],
+        "formulaChecks": [],
+        "negation": {
+          "required": true,
+          "passed": true
+        },
+        "outputDisciplinePassed": true
+      }
+    },
+    {
+      "phase": "warm",
+      "pass": 3,
+      "concurrency": 1,
+      "sampleId": "network-jitter-buffer",
+      "source": "With a 20 ms jitter buffer, packets that arrive out of order must not be silently discarded.",
+      "ok": true,
+      "latencyMs": 1004,
+      "ttftMs": 61.4,
+      "text": "具有20毫秒抖动缓冲区时，乱序到达的数据包不得被静默丢弃。",
+      "usage": {
+        "prompt_tokens": 144,
+        "prompt_tokens_details": {
+          "cached_tokens": 143
+        },
+        "completion_tokens": 24,
+        "total_tokens": 168
+      },
+      "observedResponseMode": "SSE",
+      "outputSpeed": {
+        "outputTokens": 24,
+        "outputCharacters": 29,
+        "tokenCountSource": "response usage",
+        "timingBasis": "first text delta to completion",
+        "estimatedTokensPerSecond": 24.4,
+        "endToEndCharactersPerSecond": 28.88
+      },
+      "score": {
+        "evaluatedText": "具有20毫秒抖动缓冲区时，乱序到达的数据包不得被静默丢弃。",
+        "termChecks": [
+          {
+            "expectedOneOf": [
+              "抖动缓冲"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "数据包",
+              "分组"
+            ],
+            "passed": true
+          }
+        ],
+        "numberChecks": [
+          {
+            "expectedOneOf": [
+              "20 ms",
+              "20ms",
+              "20 毫秒",
+              "20毫秒"
+            ],
+            "passed": true
+          }
+        ],
+        "formulaChecks": [],
+        "negation": {
+          "required": true,
+          "passed": true
+        },
+        "outputDisciplinePassed": true
+      }
+    },
+    {
+      "phase": "warm",
+      "pass": 3,
+      "concurrency": 1,
+      "sampleId": "bayes-formula",
+      "source": "The posterior is proportional to likelihood times prior: p(θ|x) ∝ p(x|θ)p(θ).",
+      "ok": true,
+      "latencyMs": 1248.1,
+      "ttftMs": 59.7,
+      "text": "后验与似然乘以先验成正比：p(θ|x) ∝ p(x|θ)p(θ)。",
+      "usage": {
+        "prompt_tokens": 159,
+        "prompt_tokens_details": {
+          "cached_tokens": 158
+        },
+        "completion_tokens": 30,
+        "total_tokens": 189
+      },
+      "observedResponseMode": "SSE",
+      "outputSpeed": {
+        "outputTokens": 30,
+        "outputCharacters": 33,
+        "tokenCountSource": "response usage",
+        "timingBasis": "first text delta to completion",
+        "estimatedTokensPerSecond": 24.4,
+        "endToEndCharactersPerSecond": 26.44
+      },
+      "score": {
+        "evaluatedText": "后验与似然乘以先验成正比：p(θ|x) ∝ p(x|θ)p(θ)。",
+        "termChecks": [
+          {
+            "expectedOneOf": [
+              "后验"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "似然"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "先验"
+            ],
+            "passed": true
+          }
+        ],
+        "numberChecks": [],
+        "formulaChecks": [
+          {
+            "expectedOneOf": [
+              "p(θ|x)∝p(x|θ)p(θ)"
+            ],
+            "passed": true
+          }
+        ],
+        "negation": {
+          "required": false,
+          "passed": true
+        },
+        "outputDisciplinePassed": true
+      }
+    },
+    {
+      "phase": "warm",
+      "pass": 3,
+      "concurrency": 1,
+      "sampleId": "statistics-spoken-negation",
+      "source": "So, uh, the confidence interval is 95%, which doesn't prove the null hypothesis is true.",
+      "ok": true,
+      "latencyMs": 963.3,
+      "ttftMs": 286.4,
+      "text": "所以，置信区间是95%，这并不能证明原假设为真。",
+      "usage": {
+        "prompt_tokens": 147,
+        "prompt_tokens_details": {
+          "cached_tokens": 83
+        },
+        "completion_tokens": 18,
+        "total_tokens": 165
+      },
+      "observedResponseMode": "SSE",
+      "outputSpeed": {
+        "outputTokens": 18,
+        "outputCharacters": 24,
+        "tokenCountSource": "response usage",
+        "timingBasis": "first text delta to completion",
+        "estimatedTokensPerSecond": 25.11,
+        "endToEndCharactersPerSecond": 24.91
+      },
+      "score": {
+        "evaluatedText": "所以，置信区间是95%，这并不能证明原假设为真。",
+        "termChecks": [
+          {
+            "expectedOneOf": [
+              "置信区间"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "原假设",
+              "零假设"
+            ],
+            "passed": true
+          }
+        ],
+        "numberChecks": [
+          {
+            "expectedOneOf": [
+              "95%",
+              "95％"
+            ],
+            "passed": true
+          }
+        ],
+        "formulaChecks": [],
+        "negation": {
+          "required": true,
+          "passed": true
+        },
+        "outputDisciplinePassed": true
+      }
+    },
+    {
+      "phase": "warm",
+      "pass": 3,
+      "concurrency": 1,
+      "sampleId": "cellular-authentication-order",
+      "source": "The UE may camp on LTE, but it must not attach to the network before authentication completes.",
+      "ok": true,
+      "latencyMs": 1243.7,
+      "ttftMs": 402.1,
+      "text": "UE 可以驻留在 LTE 网络中，但在认证完成前不得接入网络。",
+      "usage": {
+        "prompt_tokens": 151,
+        "prompt_tokens_details": {
+          "cached_tokens": 83
+        },
+        "completion_tokens": 22,
+        "total_tokens": 173
+      },
+      "observedResponseMode": "SSE",
+      "outputSpeed": {
+        "outputTokens": 22,
+        "outputCharacters": 31,
+        "tokenCountSource": "response usage",
+        "timingBasis": "first text delta to completion",
+        "estimatedTokensPerSecond": 24.95,
+        "endToEndCharactersPerSecond": 24.92
+      },
+      "score": {
+        "evaluatedText": "UE 可以驻留在 LTE 网络中，但在认证完成前不得接入网络。",
+        "termChecks": [
+          {
+            "expectedOneOf": [
+              "UE"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "LTE"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "认证"
+            ],
+            "passed": true
+          }
+        ],
+        "numberChecks": [],
+        "formulaChecks": [],
+        "negation": {
+          "required": true,
+          "passed": true
+        },
+        "outputDisciplinePassed": true
+      }
+    },
+    {
+      "phase": "warm",
+      "pass": 3,
+      "concurrency": 1,
+      "sampleId": "numerical-rounding-boundary",
+      "source": "If x ≤ 10^-3, do not round it to zero.",
+      "ok": true,
+      "latencyMs": 920.5,
+      "ttftMs": 281.6,
+      "text": "如果 x ≤ 10^-3，不要将其舍入为零。",
+      "usage": {
+        "prompt_tokens": 136,
+        "prompt_tokens_details": {
+          "cached_tokens": 83
+        },
+        "completion_tokens": 17,
+        "total_tokens": 153
+      },
+      "observedResponseMode": "SSE",
+      "outputSpeed": {
+        "outputTokens": 17,
+        "outputCharacters": 22,
+        "tokenCountSource": "response usage",
+        "timingBasis": "first text delta to completion",
+        "estimatedTokensPerSecond": 25.04,
+        "endToEndCharactersPerSecond": 23.9
+      },
+      "score": {
+        "evaluatedText": "如果 x ≤ 10^-3，不要将其舍入为零。",
+        "termChecks": [
+          {
+            "expectedOneOf": [
+              "舍入",
+              "取整"
+            ],
+            "passed": true
+          }
+        ],
+        "numberChecks": [],
+        "formulaChecks": [
+          {
+            "expectedOneOf": [
+              "x≤10^-3",
+              "x≤10⁻³",
+              "x<=10^-3"
+            ],
+            "passed": true
+          }
+        ],
+        "negation": {
+          "required": true,
+          "passed": true
+        },
+        "outputDisciplinePassed": true
+      }
+    },
+    {
+      "phase": "warm",
+      "pass": 4,
+      "concurrency": 1,
+      "sampleId": "ml-gradient-negation",
+      "source": "The gradient does not converge when the learning rate exceeds 0.1.",
+      "ok": true,
+      "latencyMs": 837.5,
+      "ttftMs": 286.6,
+      "text": "当学习率超过0.1时，梯度不会收敛。",
+      "usage": {
+        "prompt_tokens": 146,
+        "prompt_tokens_details": {
+          "cached_tokens": 83
+        },
+        "completion_tokens": 15,
+        "total_tokens": 161
+      },
+      "observedResponseMode": "SSE",
+      "outputSpeed": {
+        "outputTokens": 15,
+        "outputCharacters": 18,
+        "tokenCountSource": "response usage",
+        "timingBasis": "first text delta to completion",
+        "estimatedTokensPerSecond": 25.41,
+        "endToEndCharactersPerSecond": 21.49
+      },
+      "score": {
+        "evaluatedText": "当学习率超过0.1时，梯度不会收敛。",
+        "termChecks": [
+          {
+            "expectedOneOf": [
+              "梯度"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "学习率"
+            ],
+            "passed": true
+          }
+        ],
+        "numberChecks": [
+          {
+            "expectedOneOf": [
+              "0.1"
+            ],
+            "passed": true
+          }
+        ],
+        "formulaChecks": [],
+        "negation": {
+          "required": true,
+          "passed": true
+        },
+        "outputDisciplinePassed": true
+      }
+    },
+    {
+      "phase": "warm",
+      "pass": 4,
+      "concurrency": 1,
+      "sampleId": "cellular-handover-threshold",
+      "source": "A handover is not triggered unless RSRP stays below -110 dBm for 3 consecutive measurement periods.",
+      "ok": true,
+      "latencyMs": 1384,
+      "ttftMs": 404.4,
+      "text": "除非RSRP在连续3个测量周期内保持低于-110 dBm，否则不会触发切换。",
+      "usage": {
+        "prompt_tokens": 160,
+        "prompt_tokens_details": {
+          "cached_tokens": 86
+        },
+        "completion_tokens": 25,
+        "total_tokens": 185
+      },
+      "observedResponseMode": "SSE",
+      "outputSpeed": {
+        "outputTokens": 25,
+        "outputCharacters": 38,
+        "tokenCountSource": "response usage",
+        "timingBasis": "first text delta to completion",
+        "estimatedTokensPerSecond": 24.5,
+        "endToEndCharactersPerSecond": 27.46
+      },
+      "score": {
+        "evaluatedText": "除非RSRP在连续3个测量周期内保持低于-110 dBm，否则不会触发切换。",
+        "termChecks": [
+          {
+            "expectedOneOf": [
+              "切换"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "RSRP"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "dBm"
+            ],
+            "passed": true
+          }
+        ],
+        "numberChecks": [
+          {
+            "expectedOneOf": [
+              "-110",
+              "−110"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "3",
+              "三"
+            ],
+            "passed": true
+          }
+        ],
+        "formulaChecks": [],
+        "negation": {
+          "required": true,
+          "passed": true
+        },
+        "outputDisciplinePassed": true
+      }
+    },
+    {
+      "phase": "warm",
+      "pass": 4,
+      "concurrency": 1,
+      "sampleId": "queueing-littles-law",
+      "source": "Little's Law says L = λW, but it does not assume Poisson arrivals.",
+      "ok": true,
+      "latencyMs": 964.3,
+      "ttftMs": 285.7,
+      "text": "利特尔定律指出 L = λW，但它并不假设泊松到达。",
+      "usage": {
+        "prompt_tokens": 152,
+        "prompt_tokens_details": {
+          "cached_tokens": 97
+        },
+        "completion_tokens": 18,
+        "total_tokens": 170
+      },
+      "observedResponseMode": "SSE",
+      "outputSpeed": {
+        "outputTokens": 18,
+        "outputCharacters": 26,
+        "tokenCountSource": "response usage",
+        "timingBasis": "first text delta to completion",
+        "estimatedTokensPerSecond": 25.05,
+        "endToEndCharactersPerSecond": 26.96
+      },
+      "score": {
+        "evaluatedText": "利特尔定律指出 L = λW，但它并不假设泊松到达。",
+        "termChecks": [
+          {
+            "expectedOneOf": [
+              "利特尔定律"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "泊松"
+            ],
+            "passed": true
+          }
+        ],
+        "numberChecks": [],
+        "formulaChecks": [
+          {
+            "expectedOneOf": [
+              "L=λW",
+              "L=lambdaW"
+            ],
+            "passed": true
+          }
+        ],
+        "negation": {
+          "required": true,
+          "passed": true
+        },
+        "outputDisciplinePassed": true
+      }
+    },
+    {
+      "phase": "warm",
+      "pass": 4,
+      "concurrency": 1,
+      "sampleId": "economics-elasticity",
+      "source": "A price elasticity of -1.5 does not mean demand rises when price rises by 10%.",
+      "ok": true,
+      "latencyMs": 1048.5,
+      "ttftMs": 285.6,
+      "text": "价格弹性为-1.5并不意味着价格上升10%时需求会增加。",
+      "usage": {
+        "prompt_tokens": 144,
+        "prompt_tokens_details": {
+          "cached_tokens": 83
+        },
+        "completion_tokens": 20,
+        "total_tokens": 164
+      },
+      "observedResponseMode": "SSE",
+      "outputSpeed": {
+        "outputTokens": 20,
+        "outputCharacters": 28,
+        "tokenCountSource": "response usage",
+        "timingBasis": "first text delta to completion",
+        "estimatedTokensPerSecond": 24.9,
+        "endToEndCharactersPerSecond": 26.7
+      },
+      "score": {
+        "evaluatedText": "价格弹性为-1.5并不意味着价格上升10%时需求会增加。",
+        "termChecks": [
+          {
+            "expectedOneOf": [
+              "价格弹性"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "需求"
+            ],
+            "passed": true
+          }
+        ],
+        "numberChecks": [
+          {
+            "expectedOneOf": [
+              "-1.5",
+              "−1.5"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "10%",
+              "10％"
+            ],
+            "passed": true
+          }
+        ],
+        "formulaChecks": [],
+        "negation": {
+          "required": true,
+          "passed": true
+        },
+        "outputDisciplinePassed": true
+      }
+    },
+    {
+      "phase": "warm",
+      "pass": 4,
+      "concurrency": 1,
+      "sampleId": "classification-error-rates",
+      "source": "The false-positive rate fell from 2.4% to 0.8%; we cannot ignore false negatives.",
+      "ok": true,
+      "latencyMs": 1250.2,
+      "ttftMs": 402.9,
+      "text": "假阳性率从2.4%降至0.8%；我们不能忽视假阴性。",
+      "usage": {
+        "prompt_tokens": 156,
+        "prompt_tokens_details": {
+          "cached_tokens": 83
+        },
+        "completion_tokens": 22,
+        "total_tokens": 178
+      },
+      "observedResponseMode": "SSE",
+      "outputSpeed": {
+        "outputTokens": 22,
+        "outputCharacters": 26,
+        "tokenCountSource": "response usage",
+        "timingBasis": "first text delta to completion",
+        "estimatedTokensPerSecond": 24.78,
+        "endToEndCharactersPerSecond": 20.8
+      },
+      "score": {
+        "evaluatedText": "假阳性率从2.4%降至0.8%；我们不能忽视假阴性。",
+        "termChecks": [
+          {
+            "expectedOneOf": [
+              "假阳性",
+              "误报"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "假阴性",
+              "漏报"
+            ],
+            "passed": true
+          }
+        ],
+        "numberChecks": [
+          {
+            "expectedOneOf": [
+              "2.4%",
+              "2.4％"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "0.8%",
+              "0.8％"
+            ],
+            "passed": true
+          }
+        ],
+        "formulaChecks": [],
+        "negation": {
+          "required": true,
+          "passed": true
+        },
+        "outputDisciplinePassed": true
+      }
+    },
+    {
+      "phase": "warm",
+      "pass": 4,
+      "concurrency": 1,
+      "sampleId": "network-jitter-buffer",
+      "source": "With a 20 ms jitter buffer, packets that arrive out of order must not be silently discarded.",
+      "ok": true,
+      "latencyMs": 989.6,
+      "ttftMs": 60.8,
+      "text": "具有20毫秒抖动缓冲区时，乱序到达的数据包不得被静默丢弃。",
+      "usage": {
+        "prompt_tokens": 144,
+        "prompt_tokens_details": {
+          "cached_tokens": 143
+        },
+        "completion_tokens": 24,
+        "total_tokens": 168
+      },
+      "observedResponseMode": "SSE",
+      "outputSpeed": {
+        "outputTokens": 24,
+        "outputCharacters": 29,
+        "tokenCountSource": "response usage",
+        "timingBasis": "first text delta to completion",
+        "estimatedTokensPerSecond": 24.76,
+        "endToEndCharactersPerSecond": 29.3
+      },
+      "score": {
+        "evaluatedText": "具有20毫秒抖动缓冲区时，乱序到达的数据包不得被静默丢弃。",
+        "termChecks": [
+          {
+            "expectedOneOf": [
+              "抖动缓冲"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "数据包",
+              "分组"
+            ],
+            "passed": true
+          }
+        ],
+        "numberChecks": [
+          {
+            "expectedOneOf": [
+              "20 ms",
+              "20ms",
+              "20 毫秒",
+              "20毫秒"
+            ],
+            "passed": true
+          }
+        ],
+        "formulaChecks": [],
+        "negation": {
+          "required": true,
+          "passed": true
+        },
+        "outputDisciplinePassed": true
+      }
+    },
+    {
+      "phase": "warm",
+      "pass": 4,
+      "concurrency": 1,
+      "sampleId": "bayes-formula",
+      "source": "The posterior is proportional to likelihood times prior: p(θ|x) ∝ p(x|θ)p(θ).",
+      "ok": true,
+      "latencyMs": 1248,
+      "ttftMs": 57.3,
+      "text": "后验与似然乘以先验成正比：p(θ|x) ∝ p(x|θ)p(θ)。",
+      "usage": {
+        "prompt_tokens": 159,
+        "prompt_tokens_details": {
+          "cached_tokens": 158
+        },
+        "completion_tokens": 30,
+        "total_tokens": 189
+      },
+      "observedResponseMode": "SSE",
+      "outputSpeed": {
+        "outputTokens": 30,
+        "outputCharacters": 33,
+        "tokenCountSource": "response usage",
+        "timingBasis": "first text delta to completion",
+        "estimatedTokensPerSecond": 24.36,
+        "endToEndCharactersPerSecond": 26.44
+      },
+      "score": {
+        "evaluatedText": "后验与似然乘以先验成正比：p(θ|x) ∝ p(x|θ)p(θ)。",
+        "termChecks": [
+          {
+            "expectedOneOf": [
+              "后验"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "似然"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "先验"
+            ],
+            "passed": true
+          }
+        ],
+        "numberChecks": [],
+        "formulaChecks": [
+          {
+            "expectedOneOf": [
+              "p(θ|x)∝p(x|θ)p(θ)"
+            ],
+            "passed": true
+          }
+        ],
+        "negation": {
+          "required": false,
+          "passed": true
+        },
+        "outputDisciplinePassed": true
+      }
+    },
+    {
+      "phase": "warm",
+      "pass": 4,
+      "concurrency": 1,
+      "sampleId": "statistics-spoken-negation",
+      "source": "So, uh, the confidence interval is 95%, which doesn't prove the null hypothesis is true.",
+      "ok": true,
+      "latencyMs": 972.9,
+      "ttftMs": 284,
+      "text": "所以，置信区间是95%，这并不能证明原假设为真。",
+      "usage": {
+        "prompt_tokens": 147,
+        "prompt_tokens_details": {
+          "cached_tokens": 83
+        },
+        "completion_tokens": 18,
+        "total_tokens": 165
+      },
+      "observedResponseMode": "SSE",
+      "outputSpeed": {
+        "outputTokens": 18,
+        "outputCharacters": 24,
+        "tokenCountSource": "response usage",
+        "timingBasis": "first text delta to completion",
+        "estimatedTokensPerSecond": 24.68,
+        "endToEndCharactersPerSecond": 24.67
+      },
+      "score": {
+        "evaluatedText": "所以，置信区间是95%，这并不能证明原假设为真。",
+        "termChecks": [
+          {
+            "expectedOneOf": [
+              "置信区间"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "原假设",
+              "零假设"
+            ],
+            "passed": true
+          }
+        ],
+        "numberChecks": [
+          {
+            "expectedOneOf": [
+              "95%",
+              "95％"
+            ],
+            "passed": true
+          }
+        ],
+        "formulaChecks": [],
+        "negation": {
+          "required": true,
+          "passed": true
+        },
+        "outputDisciplinePassed": true
+      }
+    },
+    {
+      "phase": "warm",
+      "pass": 4,
+      "concurrency": 1,
+      "sampleId": "cellular-authentication-order",
+      "source": "The UE may camp on LTE, but it must not attach to the network before authentication completes.",
+      "ok": true,
+      "latencyMs": 1247.2,
+      "ttftMs": 402.6,
+      "text": "UE 可以驻留在 LTE 网络中，但在认证完成前不得接入网络。",
+      "usage": {
+        "prompt_tokens": 151,
+        "prompt_tokens_details": {
+          "cached_tokens": 83
+        },
+        "completion_tokens": 22,
+        "total_tokens": 173
+      },
+      "observedResponseMode": "SSE",
+      "outputSpeed": {
+        "outputTokens": 22,
+        "outputCharacters": 31,
+        "tokenCountSource": "response usage",
+        "timingBasis": "first text delta to completion",
+        "estimatedTokensPerSecond": 24.86,
+        "endToEndCharactersPerSecond": 24.86
+      },
+      "score": {
+        "evaluatedText": "UE 可以驻留在 LTE 网络中，但在认证完成前不得接入网络。",
+        "termChecks": [
+          {
+            "expectedOneOf": [
+              "UE"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "LTE"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "认证"
+            ],
+            "passed": true
+          }
+        ],
+        "numberChecks": [],
+        "formulaChecks": [],
+        "negation": {
+          "required": true,
+          "passed": true
+        },
+        "outputDisciplinePassed": true
+      }
+    },
+    {
+      "phase": "warm",
+      "pass": 4,
+      "concurrency": 1,
+      "sampleId": "numerical-rounding-boundary",
+      "source": "If x ≤ 10^-3, do not round it to zero.",
+      "ok": true,
+      "latencyMs": 925.5,
+      "ttftMs": 284.2,
+      "text": "如果 x ≤ 10^-3，不要将其舍入为零。",
+      "usage": {
+        "prompt_tokens": 136,
+        "prompt_tokens_details": {
+          "cached_tokens": 83
+        },
+        "completion_tokens": 17,
+        "total_tokens": 153
+      },
+      "observedResponseMode": "SSE",
+      "outputSpeed": {
+        "outputTokens": 17,
+        "outputCharacters": 22,
+        "tokenCountSource": "response usage",
+        "timingBasis": "first text delta to completion",
+        "estimatedTokensPerSecond": 24.95,
+        "endToEndCharactersPerSecond": 23.77
+      },
+      "score": {
+        "evaluatedText": "如果 x ≤ 10^-3，不要将其舍入为零。",
+        "termChecks": [
+          {
+            "expectedOneOf": [
+              "舍入",
+              "取整"
+            ],
+            "passed": true
+          }
+        ],
+        "numberChecks": [],
+        "formulaChecks": [
+          {
+            "expectedOneOf": [
+              "x≤10^-3",
+              "x≤10⁻³",
+              "x<=10^-3"
+            ],
+            "passed": true
+          }
+        ],
+        "negation": {
+          "required": true,
+          "passed": true
+        },
+        "outputDisciplinePassed": true
+      }
+    },
+    {
+      "phase": "warm",
+      "pass": 5,
+      "concurrency": 1,
+      "sampleId": "ml-gradient-negation",
+      "source": "The gradient does not converge when the learning rate exceeds 0.1.",
+      "ok": true,
+      "latencyMs": 845.6,
+      "ttftMs": 287.7,
+      "text": "当学习率超过0.1时，梯度不会收敛。",
+      "usage": {
+        "prompt_tokens": 146,
+        "prompt_tokens_details": {
+          "cached_tokens": 83
+        },
+        "completion_tokens": 15,
+        "total_tokens": 161
+      },
+      "observedResponseMode": "SSE",
+      "outputSpeed": {
+        "outputTokens": 15,
+        "outputCharacters": 18,
+        "tokenCountSource": "response usage",
+        "timingBasis": "first text delta to completion",
+        "estimatedTokensPerSecond": 25.1,
+        "endToEndCharactersPerSecond": 21.29
+      },
+      "score": {
+        "evaluatedText": "当学习率超过0.1时，梯度不会收敛。",
+        "termChecks": [
+          {
+            "expectedOneOf": [
+              "梯度"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "学习率"
+            ],
+            "passed": true
+          }
+        ],
+        "numberChecks": [
+          {
+            "expectedOneOf": [
+              "0.1"
+            ],
+            "passed": true
+          }
+        ],
+        "formulaChecks": [],
+        "negation": {
+          "required": true,
+          "passed": true
+        },
+        "outputDisciplinePassed": true
+      }
+    },
+    {
+      "phase": "warm",
+      "pass": 5,
+      "concurrency": 1,
+      "sampleId": "cellular-handover-threshold",
+      "source": "A handover is not triggered unless RSRP stays below -110 dBm for 3 consecutive measurement periods.",
+      "ok": true,
+      "latencyMs": 1386.1,
+      "ttftMs": 407.7,
+      "text": "除非RSRP在连续3个测量周期内保持低于-110 dBm，否则不会触发切换。",
+      "usage": {
+        "prompt_tokens": 160,
+        "prompt_tokens_details": {
+          "cached_tokens": 86
+        },
+        "completion_tokens": 25,
+        "total_tokens": 185
+      },
+      "observedResponseMode": "SSE",
+      "outputSpeed": {
+        "outputTokens": 25,
+        "outputCharacters": 38,
+        "tokenCountSource": "response usage",
+        "timingBasis": "first text delta to completion",
+        "estimatedTokensPerSecond": 24.53,
+        "endToEndCharactersPerSecond": 27.42
+      },
+      "score": {
+        "evaluatedText": "除非RSRP在连续3个测量周期内保持低于-110 dBm，否则不会触发切换。",
+        "termChecks": [
+          {
+            "expectedOneOf": [
+              "切换"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "RSRP"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "dBm"
+            ],
+            "passed": true
+          }
+        ],
+        "numberChecks": [
+          {
+            "expectedOneOf": [
+              "-110",
+              "−110"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "3",
+              "三"
+            ],
+            "passed": true
+          }
+        ],
+        "formulaChecks": [],
+        "negation": {
+          "required": true,
+          "passed": true
+        },
+        "outputDisciplinePassed": true
+      }
+    },
+    {
+      "phase": "warm",
+      "pass": 5,
+      "concurrency": 1,
+      "sampleId": "queueing-littles-law",
+      "source": "Little's Law says L = λW, but it does not assume Poisson arrivals.",
+      "ok": true,
+      "latencyMs": 972.7,
+      "ttftMs": 286.9,
+      "text": "利特尔定律指出 L = λW，但它并不假设泊松到达。",
+      "usage": {
+        "prompt_tokens": 152,
+        "prompt_tokens_details": {
+          "cached_tokens": 97
+        },
+        "completion_tokens": 18,
+        "total_tokens": 170
+      },
+      "observedResponseMode": "SSE",
+      "outputSpeed": {
+        "outputTokens": 18,
+        "outputCharacters": 26,
+        "tokenCountSource": "response usage",
+        "timingBasis": "first text delta to completion",
+        "estimatedTokensPerSecond": 24.79,
+        "endToEndCharactersPerSecond": 26.73
+      },
+      "score": {
+        "evaluatedText": "利特尔定律指出 L = λW，但它并不假设泊松到达。",
+        "termChecks": [
+          {
+            "expectedOneOf": [
+              "利特尔定律"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "泊松"
+            ],
+            "passed": true
+          }
+        ],
+        "numberChecks": [],
+        "formulaChecks": [
+          {
+            "expectedOneOf": [
+              "L=λW",
+              "L=lambdaW"
+            ],
+            "passed": true
+          }
+        ],
+        "negation": {
+          "required": true,
+          "passed": true
+        },
+        "outputDisciplinePassed": true
+      }
+    },
+    {
+      "phase": "warm",
+      "pass": 5,
+      "concurrency": 1,
+      "sampleId": "economics-elasticity",
+      "source": "A price elasticity of -1.5 does not mean demand rises when price rises by 10%.",
+      "ok": true,
+      "latencyMs": 1055.1,
+      "ttftMs": 288.4,
+      "text": "价格弹性为-1.5并不意味着价格上升10%时需求会增加。",
+      "usage": {
+        "prompt_tokens": 144,
+        "prompt_tokens_details": {
+          "cached_tokens": 83
+        },
+        "completion_tokens": 20,
+        "total_tokens": 164
+      },
+      "observedResponseMode": "SSE",
+      "outputSpeed": {
+        "outputTokens": 20,
+        "outputCharacters": 28,
+        "tokenCountSource": "response usage",
+        "timingBasis": "first text delta to completion",
+        "estimatedTokensPerSecond": 24.78,
+        "endToEndCharactersPerSecond": 26.54
+      },
+      "score": {
+        "evaluatedText": "价格弹性为-1.5并不意味着价格上升10%时需求会增加。",
+        "termChecks": [
+          {
+            "expectedOneOf": [
+              "价格弹性"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "需求"
+            ],
+            "passed": true
+          }
+        ],
+        "numberChecks": [
+          {
+            "expectedOneOf": [
+              "-1.5",
+              "−1.5"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "10%",
+              "10％"
+            ],
+            "passed": true
+          }
+        ],
+        "formulaChecks": [],
+        "negation": {
+          "required": true,
+          "passed": true
+        },
+        "outputDisciplinePassed": true
+      }
+    },
+    {
+      "phase": "warm",
+      "pass": 5,
+      "concurrency": 1,
+      "sampleId": "classification-error-rates",
+      "source": "The false-positive rate fell from 2.4% to 0.8%; we cannot ignore false negatives.",
+      "ok": true,
+      "latencyMs": 1258.5,
+      "ttftMs": 409.7,
+      "text": "假阳性率从2.4%降至0.8%；我们不能忽视假阴性。",
+      "usage": {
+        "prompt_tokens": 156,
+        "prompt_tokens_details": {
+          "cached_tokens": 83
+        },
+        "completion_tokens": 22,
+        "total_tokens": 178
+      },
+      "observedResponseMode": "SSE",
+      "outputSpeed": {
+        "outputTokens": 22,
+        "outputCharacters": 26,
+        "tokenCountSource": "response usage",
+        "timingBasis": "first text delta to completion",
+        "estimatedTokensPerSecond": 24.74,
+        "endToEndCharactersPerSecond": 20.66
+      },
+      "score": {
+        "evaluatedText": "假阳性率从2.4%降至0.8%；我们不能忽视假阴性。",
+        "termChecks": [
+          {
+            "expectedOneOf": [
+              "假阳性",
+              "误报"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "假阴性",
+              "漏报"
+            ],
+            "passed": true
+          }
+        ],
+        "numberChecks": [
+          {
+            "expectedOneOf": [
+              "2.4%",
+              "2.4％"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "0.8%",
+              "0.8％"
+            ],
+            "passed": true
+          }
+        ],
+        "formulaChecks": [],
+        "negation": {
+          "required": true,
+          "passed": true
+        },
+        "outputDisciplinePassed": true
+      }
+    },
+    {
+      "phase": "warm",
+      "pass": 5,
+      "concurrency": 1,
+      "sampleId": "network-jitter-buffer",
+      "source": "With a 20 ms jitter buffer, packets that arrive out of order must not be silently discarded.",
+      "ok": true,
+      "latencyMs": 1006.6,
+      "ttftMs": 62.1,
+      "text": "具有20毫秒抖动缓冲区时，乱序到达的数据包不得被静默丢弃。",
+      "usage": {
+        "prompt_tokens": 144,
+        "prompt_tokens_details": {
+          "cached_tokens": 143
+        },
+        "completion_tokens": 24,
+        "total_tokens": 168
+      },
+      "observedResponseMode": "SSE",
+      "outputSpeed": {
+        "outputTokens": 24,
+        "outputCharacters": 29,
+        "tokenCountSource": "response usage",
+        "timingBasis": "first text delta to completion",
+        "estimatedTokensPerSecond": 24.35,
+        "endToEndCharactersPerSecond": 28.81
+      },
+      "score": {
+        "evaluatedText": "具有20毫秒抖动缓冲区时，乱序到达的数据包不得被静默丢弃。",
+        "termChecks": [
+          {
+            "expectedOneOf": [
+              "抖动缓冲"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "数据包",
+              "分组"
+            ],
+            "passed": true
+          }
+        ],
+        "numberChecks": [
+          {
+            "expectedOneOf": [
+              "20 ms",
+              "20ms",
+              "20 毫秒",
+              "20毫秒"
+            ],
+            "passed": true
+          }
+        ],
+        "formulaChecks": [],
+        "negation": {
+          "required": true,
+          "passed": true
+        },
+        "outputDisciplinePassed": true
+      }
+    },
+    {
+      "phase": "warm",
+      "pass": 5,
+      "concurrency": 1,
+      "sampleId": "bayes-formula",
+      "source": "The posterior is proportional to likelihood times prior: p(θ|x) ∝ p(x|θ)p(θ).",
+      "ok": true,
+      "latencyMs": 1250.8,
+      "ttftMs": 60.8,
+      "text": "后验与似然乘以先验成正比：p(θ|x) ∝ p(x|θ)p(θ)。",
+      "usage": {
+        "prompt_tokens": 159,
+        "prompt_tokens_details": {
+          "cached_tokens": 158
+        },
+        "completion_tokens": 30,
+        "total_tokens": 189
+      },
+      "observedResponseMode": "SSE",
+      "outputSpeed": {
+        "outputTokens": 30,
+        "outputCharacters": 33,
+        "tokenCountSource": "response usage",
+        "timingBasis": "first text delta to completion",
+        "estimatedTokensPerSecond": 24.37,
+        "endToEndCharactersPerSecond": 26.38
+      },
+      "score": {
+        "evaluatedText": "后验与似然乘以先验成正比：p(θ|x) ∝ p(x|θ)p(θ)。",
+        "termChecks": [
+          {
+            "expectedOneOf": [
+              "后验"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "似然"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "先验"
+            ],
+            "passed": true
+          }
+        ],
+        "numberChecks": [],
+        "formulaChecks": [
+          {
+            "expectedOneOf": [
+              "p(θ|x)∝p(x|θ)p(θ)"
+            ],
+            "passed": true
+          }
+        ],
+        "negation": {
+          "required": false,
+          "passed": true
+        },
+        "outputDisciplinePassed": true
+      }
+    },
+    {
+      "phase": "warm",
+      "pass": 5,
+      "concurrency": 1,
+      "sampleId": "statistics-spoken-negation",
+      "source": "So, uh, the confidence interval is 95%, which doesn't prove the null hypothesis is true.",
+      "ok": true,
+      "latencyMs": 977.4,
+      "ttftMs": 288.5,
+      "text": "所以，置信区间是95%，这并不能证明原假设为真。",
+      "usage": {
+        "prompt_tokens": 147,
+        "prompt_tokens_details": {
+          "cached_tokens": 83
+        },
+        "completion_tokens": 18,
+        "total_tokens": 165
+      },
+      "observedResponseMode": "SSE",
+      "outputSpeed": {
+        "outputTokens": 18,
+        "outputCharacters": 24,
+        "tokenCountSource": "response usage",
+        "timingBasis": "first text delta to completion",
+        "estimatedTokensPerSecond": 24.68,
+        "endToEndCharactersPerSecond": 24.55
+      },
+      "score": {
+        "evaluatedText": "所以，置信区间是95%，这并不能证明原假设为真。",
+        "termChecks": [
+          {
+            "expectedOneOf": [
+              "置信区间"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "原假设",
+              "零假设"
+            ],
+            "passed": true
+          }
+        ],
+        "numberChecks": [
+          {
+            "expectedOneOf": [
+              "95%",
+              "95％"
+            ],
+            "passed": true
+          }
+        ],
+        "formulaChecks": [],
+        "negation": {
+          "required": true,
+          "passed": true
+        },
+        "outputDisciplinePassed": true
+      }
+    },
+    {
+      "phase": "warm",
+      "pass": 5,
+      "concurrency": 1,
+      "sampleId": "cellular-authentication-order",
+      "source": "The UE may camp on LTE, but it must not attach to the network before authentication completes.",
+      "ok": true,
+      "latencyMs": 1263.3,
+      "ttftMs": 408.2,
+      "text": "UE 可以驻留在 LTE 网络中，但在认证完成前不得接入网络。",
+      "usage": {
+        "prompt_tokens": 151,
+        "prompt_tokens_details": {
+          "cached_tokens": 83
+        },
+        "completion_tokens": 22,
+        "total_tokens": 173
+      },
+      "observedResponseMode": "SSE",
+      "outputSpeed": {
+        "outputTokens": 22,
+        "outputCharacters": 31,
+        "tokenCountSource": "response usage",
+        "timingBasis": "first text delta to completion",
+        "estimatedTokensPerSecond": 24.56,
+        "endToEndCharactersPerSecond": 24.54
+      },
+      "score": {
+        "evaluatedText": "UE 可以驻留在 LTE 网络中，但在认证完成前不得接入网络。",
+        "termChecks": [
+          {
+            "expectedOneOf": [
+              "UE"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "LTE"
+            ],
+            "passed": true
+          },
+          {
+            "expectedOneOf": [
+              "认证"
+            ],
+            "passed": true
+          }
+        ],
+        "numberChecks": [],
+        "formulaChecks": [],
+        "negation": {
+          "required": true,
+          "passed": true
+        },
+        "outputDisciplinePassed": true
+      }
+    },
+    {
+      "phase": "warm",
+      "pass": 5,
+      "concurrency": 1,
+      "sampleId": "numerical-rounding-boundary",
+      "source": "If x ≤ 10^-3, do not round it to zero.",
+      "ok": true,
+      "latencyMs": 943.5,
+      "ttftMs": 287.4,
+      "text": "如果 x ≤ 10^-3，不要将其舍入为零。",
+      "usage": {
+        "prompt_tokens": 136,
+        "prompt_tokens_details": {
+          "cached_tokens": 83
+        },
+        "completion_tokens": 17,
+        "total_tokens": 153
+      },
+      "observedResponseMode": "SSE",
+      "outputSpeed": {
+        "outputTokens": 17,
+        "outputCharacters": 22,
+        "tokenCountSource": "response usage",
+        "timingBasis": "first text delta to completion",
+        "estimatedTokensPerSecond": 24.39,
+        "endToEndCharactersPerSecond": 23.32
+      },
+      "score": {
+        "evaluatedText": "如果 x ≤ 10^-3，不要将其舍入为零。",
+        "termChecks": [
+          {
+            "expectedOneOf": [
+              "舍入",
+              "取整"
+            ],
+            "passed": true
+          }
+        ],
+        "numberChecks": [],
+        "formulaChecks": [
+          {
+            "expectedOneOf": [
+              "x≤10^-3",
+              "x≤10⁻³",
+              "x<=10^-3"
+            ],
+            "passed": true
+          }
+        ],
+        "negation": {
+          "required": true,
+          "passed": true
+        },
+        "outputDisciplinePassed": true
+      }
+    }
+  ]
+}
