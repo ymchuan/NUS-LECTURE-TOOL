@@ -38,6 +38,7 @@ import {
 import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { DocumentPagePreview } from "./components/DocumentPagePreview";
 import { RichMessage } from "./components/RichMessage";
+import { TranslationDialog } from "./components/TranslationDialog";
 import { useLectureSession, type StartLectureOptions } from "./hooks/useLectureSession";
 import { emptyCourseSettings, settingsForCourse } from "./lib/courses";
 import {
@@ -67,6 +68,7 @@ import {
   slidesMimeType,
 } from "./lib/powerpoint";
 import { buildLectureSummaryInput } from "./lib/summary";
+import { translateArchivedSegment } from "./lib/translation";
 import type {
   Course,
   ChatAnswer,
@@ -2197,10 +2199,12 @@ function TranscriptRow({
   segment,
   bookmarked,
   highlighted,
+  onRetry,
 }: {
   segment: TranscriptSegment;
   bookmarked: boolean;
   highlighted: boolean;
+  onRetry?: () => void;
 }) {
   return (
     <article
@@ -2221,6 +2225,7 @@ function TranscriptRow({
         ) : null}
       </div>
       {bookmarked && <Bookmark className="row-bookmark" size={15} aria-label="已标记" />}
+      {onRetry && segment.state !== "translating" && <button className="transcript-retry-button" type="button" title="重新翻译" onClick={onRetry}><RotateCcw size={13} /></button>}
     </article>
   );
 }
@@ -2238,6 +2243,9 @@ export default function App() {
   const [appError, setAppError] = useState<string | null>(null);
   const [summaryPreferences, setSummaryPreferences] = useState<SummaryPreferences>(loadSummaryPreferences);
   const [selectedSummary, setSelectedSummary] = useState<TopicSummary | null>(null);
+  const [translationSegment, setTranslationSegment] = useState<TranscriptSegment | null>(null);
+  const [translationBusy, setTranslationBusy] = useState(false);
+  const [translationError, setTranslationError] = useState<string | null>(null);
   const [regeneratingLectureSummary, setRegeneratingLectureSummary] = useState(false);
   const [backfillProgress, setBackfillProgress] = useState<string | null>(null);
   const [historyOpen, setHistoryOpen] = useState(false);
@@ -2295,6 +2303,24 @@ export default function App() {
     && !displaySummaries.some((summary) => summary.kind === "lecture"),
   );
   const isViewingHistory = archivedLecture !== null;
+
+  const retryArchivedTranslation = async () => {
+    if (!translationSegment || !archivedLecture || translationBusy) return;
+    setTranslationBusy(true);
+    setTranslationError(null);
+    try {
+      const update = (next: TranscriptSegment) => {
+        setTranslationSegment(next);
+        setArchivedLecture((current) => current ? { ...current, segments: current.segments.map((item) => item.id === next.id ? next : item) } : current);
+      };
+      const updated = await translateArchivedSegment(translationSegment, archivedLecture.segments, settings, summaryPreferences, update);
+      const segments = archivedLecture.segments.map((item) => item.id === updated.id ? updated : item);
+      await invoke("save_lecture_snapshot", { snapshot: { lectureId: archivedLecture.lectureId, elapsedMs: archivedLecture.elapsedMs, status: archivedLecture.status, segments, summaries: archivedLecture.summaries } });
+      setArchivedLecture((current) => current ? { ...current, segments } : current);
+      setTranslationSegment(null);
+    } catch (reason) { setTranslationError(String(reason)); }
+    finally { setTranslationBusy(false); }
+  };
 
   const commitSlideMatch = useCallback((match: SlideMatch | null) => {
     slideMatchRef.current = match;
@@ -3363,6 +3389,7 @@ export default function App() {
                   key={segment.id}
                   bookmarked={bookmarks.some((bookmark) => bookmark.segmentId === segment.id)}
                   highlighted={highlightedSegmentId === segment.id}
+                  onRetry={isViewingHistory ? () => { setTranslationSegment(segment); setTranslationError(null); } : undefined}
                 />
               ))
             ) : (
@@ -3386,6 +3413,7 @@ export default function App() {
               </div>
             )}
           </div>
+          <TranslationDialog segment={translationSegment} busy={translationBusy} error={translationError} onTranslate={() => void retryArchivedTranslation()} onClose={() => { if (!translationBusy) setTranslationSegment(null); }} />
           {!followingLatest && !isViewingHistory && (
             <button className="return-latest-button" type="button" onClick={jumpToLatest}>
               <ChevronDownCircle size={17} />
